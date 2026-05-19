@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>月下夢 — LLM Orchestration · 발표용 대시보드</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;800&family=Gowun+Batang:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#080d1c; --bg2:#0e1530; --panel:#101935; --panel2:#172147;
+    --gold:#d4af37; --gold-bri:#f4d35e; --gold-dim:#6e5a26;
+    --text:#e8d9b0; --text-dim:#9b8c63; --text-mute:#5f5638;
+    --line:#3a3220; --line-bri:#6e5a26;
+    --mok:#6dc375; --hwa:#ff7d6b; --to:#d4a857; --geum:#d0d0d0; --su:#6fb8ff;
+    --ok:#8de28d; --warn:#ffcc66; --err:#ff7a7a;
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'Noto Serif KR','Gowun Batang',serif}
+  body{
+    min-height:100vh;
+    background:
+      radial-gradient(1.5px 1.5px at 10% 20%,#fff8e0,transparent 60%),
+      radial-gradient(2px 2px at 30% 70%,#ffd97a,transparent 60%),
+      radial-gradient(1px 1px at 60% 30%,#fff8e0,transparent 60%),
+      radial-gradient(2px 2px at 80% 80%,#ffd97a,transparent 60%),
+      radial-gradient(1px 1px at 90% 15%,#fff8e0,transparent 60%),
+      radial-gradient(ellipse 70% 50% at 50% 0%,rgba(60,40,90,.35),transparent 70%),
+      linear-gradient(180deg,var(--bg) 0%,var(--bg2) 100%);
+    background-attachment:fixed;
+  }
+  body::before{
+    content:'月 下 夢';
+    position:fixed;inset:0;display:grid;place-items:center;
+    font-size:30vw;color:rgba(212,175,55,.035);letter-spacing:5vw;
+    pointer-events:none;z-index:0;white-space:nowrap;font-weight:800;
+  }
+  .wrap{position:relative;z-index:1;max-width:1480px;margin:0 auto;padding:32px 28px 80px}
+
+  /* HERO */
+  .hero{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:end;padding:24px 4px 28px;border-bottom:1px solid var(--line)}
+  .hero h1{margin:0;font-size:48px;letter-spacing:.04em;line-height:1.1;font-weight:800}
+  .hero h1 .accent{color:var(--gold-bri);text-shadow:0 0 22px rgba(244,211,94,.35)}
+  .hero .sub{color:var(--text-dim);margin-top:8px;font-size:15px}
+  .hero .tag{display:inline-block;border:1px solid var(--line-bri);color:var(--gold);padding:4px 10px;border-radius:14px;font-size:12px;margin-right:8px;background:rgba(212,175,55,.05)}
+  .hero .live{
+    display:flex;gap:14px;align-items:center;
+    background:rgba(0,0,0,.35);border:1px solid var(--line);border-radius:14px;padding:14px 18px;
+    font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-dim)
+  }
+  .live .dot{width:10px;height:10px;border-radius:50%;background:var(--ok);box-shadow:0 0 12px var(--ok);animation:pulse 1.6s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+  .live b{color:var(--gold-bri);font-weight:600}
+  .live span+span{border-left:1px solid var(--line);padding-left:14px}
+
+  /* 모바일 ≤ 720px : HERO 단일 컬럼 + 라이브 박스 풀 폭 */
+  @media (max-width:720px){
+    .wrap{padding:20px 14px 60px}
+    .hero{grid-template-columns:1fr;gap:14px}
+    .hero h1{font-size:34px;line-height:1.15}
+    .hero .sub{font-size:13.5px}
+    .hero .live{
+      width:100%;flex-wrap:wrap;gap:10px 14px;padding:12px 14px;font-size:13px;
+    }
+    .hero .live span{flex:1 1 40%;display:flex;align-items:center;gap:6px;white-space:nowrap}
+    .hero .live span+span{border-left:0;padding-left:0}
+    .hero .live b{font-size:14px}
+    .sec-head{flex-wrap:wrap}
+    .sec-head .hint{margin-left:0;flex:1 1 100%;font-size:12px}
+    .sec-head h2{font-size:20px}
+    .proof-input textarea{min-width:0;width:100%}
+    .proof-input>div{flex:1 1 100%}
+  }
+
+  /* SECTION */
+  section{margin-top:38px}
+  .sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:14px}
+  .sec-head .num{font-family:'JetBrains Mono',monospace;color:var(--gold-dim);font-size:13px;letter-spacing:.15em}
+  .sec-head h2{margin:0;font-size:24px;color:var(--text);letter-spacing:.03em}
+  .sec-head .hint{color:var(--text-mute);font-size:13px;margin-left:auto}
+
+  /* ARCHITECTURE */
+  .arch{
+    background:linear-gradient(180deg,var(--panel) 0%,var(--panel2) 100%);
+    border:1px solid var(--line);border-radius:18px;padding:20px;
+    box-shadow:0 8px 40px rgba(0,0,0,.45) inset, 0 0 0 1px rgba(212,175,55,.05);
+  }
+  .arch svg{width:100%;height:auto;display:block}
+  /* SVG 텍스트 가독성: 1920px에서도 또렷하게 */
+  .arch svg text{font-size:13px}
+  .arch svg text[font-size="9"]{font-size:11px}
+  .arch svg text[font-size="10"]{font-size:12px}
+  .arch svg text[font-size="11"]{font-size:13px}
+  .arch svg text[font-size="12"]{font-size:14px}
+  .arch svg text[font-size="13"]{font-size:15px}
+  .arch svg text[font-size="14"]{font-size:16px}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:14px;font-size:12px;color:var(--text-dim);font-family:'JetBrains Mono',monospace}
+  .legend i{display:inline-block;width:14px;height:14px;border-radius:3px;vertical-align:-2px;margin-right:6px}
+
+  /* DEMO */
+  .demo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  @media (max-width:1100px){.demo-grid{grid-template-columns:1fr}}
+  .demo{
+    background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;
+    display:flex;flex-direction:column;min-height:520px;
+  }
+  .demo h3{margin:0 0 6px;font-size:18px;color:var(--gold-bri);letter-spacing:.05em}
+  .demo .desc{color:var(--text-dim);font-size:13px;margin:0 0 14px}
+  .demo .endpoint{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-mute);margin-bottom:12px;word-break:break-all}
+  .demo .form label{display:block;color:var(--text-dim);font-size:12px;margin:8px 0 4px;font-family:'JetBrains Mono',monospace;letter-spacing:.05em}
+  .demo .form input,.demo .form select,.demo .form textarea{
+    width:100%;background:rgba(0,0,0,.35);border:1px solid var(--line);color:var(--text);
+    padding:9px 11px;border-radius:8px;font-family:inherit;font-size:14px;
+  }
+  .demo .form textarea{min-height:60px;resize:vertical;font-family:inherit}
+  .demo .form .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .demo button.go{
+    margin-top:14px;background:linear-gradient(180deg,var(--gold-bri),var(--gold));color:#1a1306;
+    border:0;padding:11px 14px;border-radius:9px;font-weight:800;cursor:pointer;letter-spacing:.05em;
+    font-family:'Noto Serif KR',serif;font-size:14px;transition:transform .1s;
+  }
+  .demo button.go:hover{transform:translateY(-1px)}
+  .demo button.go:disabled{opacity:.5;cursor:wait}
+  .stages{margin-top:16px;flex:1;display:flex;flex-direction:column;gap:6px}
+  .stage{
+    display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:12px;
+    color:var(--text-mute);padding:7px 10px;border:1px solid transparent;border-radius:7px;
+    transition:all .3s;
+  }
+  .stage .ix{
+    width:22px;height:22px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;
+    font-size:11px;color:var(--text-mute);flex-shrink:0;
+  }
+  .stage .label{flex:1}
+  .stage .ms{color:var(--text-mute);font-size:11px}
+  .stage.active{color:var(--gold-bri);border-color:var(--gold-dim);background:rgba(212,175,55,.06)}
+  .stage.active .ix{border-color:var(--gold);color:var(--gold);box-shadow:0 0 12px rgba(244,211,94,.35)}
+  .stage.done{color:var(--ok);border-color:rgba(141,226,141,.18)}
+  .stage.done .ix{border-color:var(--ok);color:var(--ok);background:rgba(141,226,141,.08)}
+  .stage.err{color:var(--err);border-color:rgba(255,122,122,.25)}
+  .stage.err .ix{border-color:var(--err);color:var(--err)}
+  .result{
+    margin-top:12px;background:rgba(0,0,0,.4);border:1px dashed var(--line);border-radius:8px;
+    padding:10px 12px;max-height:240px;overflow:auto;font-size:13px;line-height:1.55;color:var(--text);
+    white-space:pre-wrap;word-break:break-word;
+  }
+  .result:empty{display:none}
+  .result.json{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim)}
+
+  /* METRICS */
+  .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  @media (max-width:1100px){.metrics{grid-template-columns:repeat(2,1fr)}}
+  .met{
+    background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;
+    position:relative;overflow:hidden;
+  }
+  .met::before{
+    content:'';position:absolute;inset:0;background:radial-gradient(circle at 100% 0%,rgba(212,175,55,.08),transparent 60%);
+    pointer-events:none;
+  }
+  .met .k{color:var(--text-mute);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em}
+  .met .v{font-size:30px;color:var(--gold-bri);font-weight:800;margin-top:4px;letter-spacing:.02em;font-family:'JetBrains Mono',monospace}
+  .met .v.small{font-size:20px}
+  .met .u{color:var(--text-dim);font-size:12px;margin-top:2px}
+
+  /* PIPELINE NODES */
+  .node-stack{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:18px}
+  .pnode{
+    background:rgba(0,0,0,.3);border:1px solid var(--line);border-radius:10px;padding:10px 12px;
+    text-align:center;font-size:12px;color:var(--text-dim);
+  }
+  .pnode b{display:block;color:var(--gold-bri);font-size:13px;margin-bottom:3px;letter-spacing:.05em}
+  .pnode small{color:var(--text-mute);font-size:10px;font-family:'JetBrains Mono',monospace}
+
+  /* ─── PROOF OF GROUNDING ─── */
+  .proof-banner{
+    margin:14px 0 18px;padding:16px 20px;border-radius:14px;
+    background:linear-gradient(90deg,rgba(244,211,94,.08),rgba(109,195,117,.05) 50%,rgba(255,125,107,.06));
+    border:1px solid var(--line-bri);display:flex;align-items:center;gap:18px;
+  }
+  .proof-banner .big{font-size:22px;font-weight:800;color:var(--gold-bri);letter-spacing:.04em}
+  .proof-banner .sub{color:var(--text-dim);font-size:13px;line-height:1.55}
+  .proof-banner .vs{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-mute);border-left:1px solid var(--line);padding-left:18px;margin-left:auto;text-align:right}
+  .proof-banner .vs b{color:var(--ok)}
+  .proof-banner .vs i{color:var(--err);font-style:normal}
+
+  .proof-input{
+    background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:16px;
+    display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;
+  }
+  .proof-input label{display:block;color:var(--text-dim);font-size:11px;margin-bottom:4px;font-family:'JetBrains Mono',monospace;letter-spacing:.08em}
+  .proof-input input,.proof-input select,.proof-input textarea{
+    background:rgba(0,0,0,.35);border:1px solid var(--line);color:var(--text);padding:9px 11px;
+    border-radius:7px;font-family:inherit;font-size:14px;min-width:160px;
+  }
+  .proof-input textarea{min-width:380px;min-height:42px;font-family:inherit;resize:vertical}
+  .proof-input button{
+    background:linear-gradient(180deg,var(--gold-bri),var(--gold));color:#1a1306;border:0;
+    padding:11px 22px;border-radius:8px;font-weight:800;cursor:pointer;letter-spacing:.05em;font-size:14px;
+    font-family:'Noto Serif KR',serif;box-shadow:0 0 18px rgba(244,211,94,.25);
+  }
+  .proof-input button:disabled{opacity:.5;cursor:wait;box-shadow:none}
+
+  .proof-grid{
+    display:grid;grid-template-columns:1.05fr 1.4fr 1.4fr;gap:14px;
+  }
+  @media (max-width:1200px){.proof-grid{grid-template-columns:1fr}}
+  .proof-col{
+    background:var(--panel);border-radius:14px;padding:16px 18px;
+    border:1px solid var(--line);position:relative;overflow:hidden;min-height:560px;
+    display:flex;flex-direction:column;
+  }
+  .proof-col.engine{border-color:#6dc375;box-shadow:inset 0 0 0 1px rgba(109,195,117,.12)}
+  .proof-col.grounded{border-color:var(--gold-bri);box-shadow:inset 0 0 0 1px rgba(244,211,94,.18),0 0 24px rgba(244,211,94,.08)}
+  .proof-col.naked{border-color:#ff7a7a;box-shadow:inset 0 0 0 1px rgba(255,122,122,.12)}
+
+  .proof-col .badge{
+    position:absolute;top:14px;right:14px;font-size:10px;font-family:'JetBrains Mono',monospace;
+    letter-spacing:.15em;padding:3px 8px;border-radius:10px;border:1px solid;
+  }
+  .proof-col.engine    .badge{color:#6dc375;border-color:#6dc375;background:rgba(109,195,117,.08)}
+  .proof-col.grounded  .badge{color:var(--gold-bri);border-color:var(--gold-bri);background:rgba(244,211,94,.08)}
+  .proof-col.naked     .badge{color:#ff7a7a;border-color:#ff7a7a;background:rgba(255,122,122,.08)}
+
+  .proof-col h3{margin:0 0 4px;font-size:16px;letter-spacing:.04em}
+  .proof-col.engine    h3{color:#6dc375}
+  .proof-col.grounded  h3{color:var(--gold-bri)}
+  .proof-col.naked     h3{color:#ff7a7a}
+  .proof-col .why{color:var(--text-mute);font-size:11px;font-family:'JetBrains Mono',monospace;margin-bottom:12px;letter-spacing:.05em}
+
+  .proof-col .body{flex:1;min-height:0;overflow:auto;font-size:13px;line-height:1.7;color:var(--text);white-space:pre-wrap;word-break:break-word}
+  .proof-col.engine .body{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text-dim);line-height:1.6}
+  .proof-col .placeholder{color:var(--text-mute);font-style:italic;font-size:12px}
+
+  /* engine 키 강조 */
+  .kchip{
+    display:inline-block;font-family:'JetBrains Mono',monospace;font-size:11px;
+    padding:2px 7px;margin:1px 3px 1px 0;border-radius:5px;
+    background:rgba(109,195,117,.12);color:#a6e0aa;border:1px solid rgba(109,195,117,.35);
+  }
+  .kchip.hot{background:rgba(244,211,94,.18);color:var(--gold-bri);border-color:var(--gold-bri)}
+
+  /* grounded 본문에서 엔진값 하이라이트 */
+  .gh{
+    background:linear-gradient(180deg,transparent 55%, rgba(244,211,94,.35) 55%);
+    color:var(--gold-bri);font-weight:700;padding:0 2px;border-radius:2px;
+  }
+  /* naked 본문에서 환각/일반론 키워드 */
+  .nh{
+    background:linear-gradient(180deg,transparent 55%, rgba(255,122,122,.3) 55%);
+    color:#ffb0b0;padding:0 2px;border-radius:2px;
+  }
+
+  .scorebar{display:flex;gap:14px;margin-top:12px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim)}
+  .scorebar b{color:var(--gold-bri);font-size:14px}
+  .scorebar .red b{color:#ff7a7a}
+
+  /* timeline mini for proof */
+  .proof-timeline{
+    display:flex;justify-content:space-between;gap:6px;margin:10px 0 6px;font-family:'JetBrains Mono',monospace;font-size:10px;
+  }
+  .proof-timeline .t{flex:1;text-align:center;padding:4px 0;border:1px solid var(--line);border-radius:5px;color:var(--text-mute)}
+  .proof-timeline .t.on{color:var(--gold-bri);border-color:var(--gold);background:rgba(244,211,94,.08)}
+  .proof-timeline .t.done{color:#8de28d;border-color:#6dc375}
+  .proof-timeline .t.err{color:#ff7a7a;border-color:#ff7a7a}
+
+  /* FOOTER */
+  footer{margin-top:50px;padding:20px 4px;border-top:1px solid var(--line);color:var(--text-mute);font-size:12px;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+  footer code{color:var(--gold-dim);font-family:'JetBrains Mono',monospace}
+
+  /* Edge animation */
+  @keyframes flowDash{to{stroke-dashoffset:-40}}
+  .edge.flowing{stroke-dasharray:6 6;animation:flowDash 1.2s linear infinite}
+
+  /* ===== 파이프라인 노드 클릭 인터랙션 ===== */
+  .pipe-node rect{transition:filter .2s ease, stroke-width .2s ease}
+  .pipe-node:hover rect{filter:brightness(1.4);stroke-width:2.5}
+  .pipe-node:hover text{filter:brightness(1.2)}
+
+  /* ===== 모달 ===== */
+  .pipe-modal-bg{
+    position:fixed;inset:0;background:rgba(8,13,28,.85);backdrop-filter:blur(6px);
+    z-index:100;display:none;align-items:flex-start;justify-content:center;
+    padding:40px 20px;overflow-y:auto;
+  }
+  .pipe-modal-bg.open{display:flex}
+  .pipe-modal{
+    background:linear-gradient(180deg,var(--panel) 0%,var(--panel2) 100%);
+    border:1px solid var(--gold-bri);border-radius:18px;
+    max-width:1180px;width:100%;padding:28px 32px 32px;
+    box-shadow:0 12px 60px rgba(0,0,0,.6), 0 0 0 1px rgba(212,175,55,.1);
+    color:var(--text);font-family:'Noto Serif KR',serif;
+    animation:modalSlideUp .25s ease-out;
+  }
+  .pipe-svg-wrap{
+    margin:8px 0 4px;
+    padding:8px 8px 4px;
+    background:rgba(0,0,0,0.18);
+    border:1px solid var(--line);border-radius:10px;
+    overflow:auto;
+  }
+  @keyframes modalSlideUp{
+    from{opacity:0;transform:translateY(20px)}
+    to{opacity:1;transform:translateY(0)}
+  }
+  .pipe-modal-head{display:flex;align-items:baseline;gap:14px;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:18px}
+  .pipe-modal-tag{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:3px;padding:4px 10px;border-radius:12px}
+  .pipe-modal-tag.saju{background:rgba(109,195,117,.12);color:#6dc375;border:1px solid #6dc375}
+  .pipe-modal-tag.mbti{background:rgba(255,125,107,.12);color:#ff7d6b;border:1px solid #ff7d6b}
+  .pipe-modal-tag.dream{background:rgba(111,184,255,.12);color:#6fb8ff;border:1px solid #6fb8ff}
+  .pipe-modal-tag.divination{background:rgba(212,168,87,.12);color:#d4a857;border:1px solid #d4a857}
+  .pipe-modal-tag.clinical{background:rgba(208,208,208,.10);color:#d0d0d0;border:1px solid #d0d0d0}
+  .pipe-modal h3{margin:0;font-size:24px;color:var(--gold-bri);letter-spacing:2px;font-weight:800}
+  .pipe-modal-hint{margin-left:auto;color:var(--text-mute);font-size:12px;font-family:'JetBrains Mono',monospace}
+  .pipe-modal-close{
+    position:absolute;top:18px;right:24px;background:none;border:none;
+    color:var(--text-mute);font-size:24px;cursor:pointer;line-height:1;
+    transition:color .2s ease;
+  }
+  .pipe-modal-close:hover{color:var(--gold-bri)}
+
+  /* 모달 안 세부 단계 (버티컬 흐름) */
+  .pipe-steps{display:flex;flex-direction:column;gap:0}
+  .pipe-step{
+    display:grid;grid-template-columns:50px 80px 1fr;gap:12px;align-items:start;
+    padding:14px 0;border-bottom:1px dashed rgba(212,175,55,.12);
+  }
+  .pipe-step:last-child{border-bottom:none}
+  .pipe-step-num{
+    display:flex;align-items:center;justify-content:center;
+    width:36px;height:36px;border-radius:50%;
+    background:var(--panel);border:2px solid var(--gold-dim);
+    color:var(--gold-bri);font-weight:700;font-size:14px;
+    font-family:'JetBrains Mono',monospace;
+  }
+  .pipe-step-time{
+    font-family:'JetBrains Mono',monospace;font-size:11px;
+    color:var(--gold-dim);padding-top:10px;
+  }
+  .pipe-step-body{padding-top:6px}
+  .pipe-step-title{font-size:14px;font-weight:600;color:var(--text);margin:0 0 4px}
+  .pipe-step-desc{font-size:12px;color:var(--text-dim);line-height:1.6;margin:0}
+  .pipe-step-meta{font-size:10px;color:var(--text-mute);font-family:'JetBrains Mono',monospace;margin-top:4px}
+
+  /* 핵심 단계 강조 */
+  .pipe-step.star .pipe-step-num{border-color:var(--gold-bri);background:rgba(244,211,94,.1);color:var(--gold-bri)}
+  .pipe-step.star .pipe-step-title{color:var(--gold-bri)}
+  .pipe-step.warn .pipe-step-num{border-color:#ff7a7a;background:rgba(255,122,122,.08);color:#ff7a7a}
+  .pipe-step.ok .pipe-step-num{border-color:#8de28d;background:rgba(141,226,141,.1);color:#8de28d}
+
+  /* ADR 칩 */
+  .pipe-adr-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+  .pipe-adr-chip{
+    font-size:10px;font-family:'JetBrains Mono',monospace;
+    padding:2px 8px;border-radius:8px;
+    background:rgba(212,175,55,.08);color:var(--gold-dim);
+    border:1px solid rgba(212,175,55,.15);
+  }
+
+  /* footer */
+  .pipe-modal-foot{
+    margin-top:18px;padding-top:14px;border-top:1px dashed var(--line);
+    font-size:11px;color:var(--text-mute);font-family:'JetBrains Mono',monospace;
+    text-align:right;
+  }
+
+  @media (max-width:720px){
+    .pipe-modal{padding:20px 16px}
+    .pipe-modal-head{flex-wrap:wrap}
+    .pipe-step{grid-template-columns:36px 60px 1fr;gap:8px}
+    .pipe-step-num{width:30px;height:30px;font-size:12px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HERO -->
+  <header class="hero">
+    <div>
+      <div class="tag">FastAPI · 50+ endpoints</div>
+      <div class="tag">MiniMax × BizRouter LLM</div>
+      <div class="tag">Multi-Domain Fusion</div>
+      <h1>月下夢 <span class="accent">LLM Orchestration</span></h1>
+      <p class="sub">사주(四柱) · MBTI · 타로 · 주역 · 화패(花牌) · 꿈해석 · 임상스크리닝 — 이질적 도메인을 단일 LLM 파이프라인으로 융합하는 운세 플랫폼의 실시간 오케스트레이션 뷰</p>
+    </div>
+    <div class="live">
+      <span>STATUS <b id="h-status">…</b></span>
+      <span>REQ <b id="h-req">…</b></span>
+      <span>AVG <b id="h-avg">…</b>ms</span>
+      <span>P95 <b id="h-p95">…</b>ms</span>
+    </div>
+  </header>
+
+  <!-- ARCHITECTURE -->
+  <section>
+    <div class="sec-head">
+      <div class="num">01 ─ ARCHITECTURE</div>
+      <h2>LLM 오케스트레이션 토폴로지</h2>
+      <div class="hint">사용자 입력 → 도메인 엔진 병렬화 → LLM 융합 → 안전성 검증 → 응답</div>
+    </div>
+    <div class="arch">
+      <svg viewBox="0 0 1380 460" xmlns="http://www.w3.org/2000/svg" aria-label="orchestration diagram">
+        <defs>
+          <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0 0 L10 5 L0 10 z" fill="#6e5a26"/>
+          </marker>
+          <marker id="arrgold" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0 0 L10 5 L0 10 z" fill="#f4d35e"/>
+          </marker>
+          <linearGradient id="goldgrad" x1="0" x2="1">
+            <stop offset="0" stop-color="#d4af37"/>
+            <stop offset="1" stop-color="#f4d35e"/>
+          </linearGradient>
+        </defs>
+
+        <!-- COLUMN HEADERS -->
+        <g font-family="JetBrains Mono,monospace" font-size="11" fill="#6e5a26" letter-spacing="2">
+          <text x="80"  y="32">① INPUT</text>
+          <text x="340" y="32">② DOMAIN ENGINES (parallel)</text>
+          <text x="720" y="32">③ LLM FUSION</text>
+          <text x="990" y="32">④ SAFETY &amp; ENRICH</text>
+          <text x="1240" y="32">⑤ OUTPUT</text>
+        </g>
+
+        <!-- DETERMINISTIC EMPHASIS BANNER -->
+        <g>
+          <rect x="316" y="42" width="208" height="14" rx="7" fill="#13251a" stroke="#6dc375"/>
+          <text x="420" y="53" font-size="9" fill="#6dc375" font-family="JetBrains Mono,monospace" text-anchor="middle" letter-spacing="2">DETERMINISTIC · NO LLM</text>
+          <rect x="664" y="42" width="280" height="14" rx="7" fill="#2b2415" stroke="#f4d35e"/>
+          <text x="804" y="53" font-size="9" fill="#f4d35e" font-family="JetBrains Mono,monospace" text-anchor="middle" letter-spacing="1">CONTEXT-INJECTED · NOT PRETRAINED</text>
+        </g>
+
+        <!-- COLUMN 1 : USER INPUT -->
+        <g>
+          <rect x="40" y="55"  width="200" height="60" rx="10" fill="#172147" stroke="#6e5a26"/>
+          <text x="60" y="80" font-size="14" fill="#f4d35e" font-weight="700">생년월일시 · 성별</text>
+          <text x="60" y="100" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">dt_local · gender · tz</text>
+
+          <rect x="40" y="135" width="200" height="60" rx="10" fill="#172147" stroke="#6e5a26"/>
+          <text x="60" y="160" font-size="14" fill="#f4d35e" font-weight="700">MBTI · 질문</text>
+          <text x="60" y="180" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">mbti · question</text>
+
+          <rect x="40" y="215" width="200" height="60" rx="10" fill="#172147" stroke="#6e5a26"/>
+          <text x="60" y="240" font-size="14" fill="#f4d35e" font-weight="700">꿈 텍스트</text>
+          <text x="60" y="260" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">dream_text</text>
+
+          <rect x="40" y="295" width="200" height="60" rx="10" fill="#172147" stroke="#6e5a26"/>
+          <text x="60" y="320" font-size="14" fill="#f4d35e" font-weight="700">타로 / 화패 / 주역</text>
+          <text x="60" y="340" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">cards · spread · seed</text>
+        </g>
+
+        <!-- COLUMN 2 : DOMAIN ENGINES (clickable) -->
+        <g>
+          <!-- saju -->
+          <g class="pipe-node" data-pipeline="saju" style="cursor:pointer">
+            <rect x="320" y="55"  width="260" height="60" rx="10" fill="#13251a" stroke="#6dc375"/>
+            <text x="340" y="78"  font-size="13" fill="#6dc375" font-weight="700">사주 엔진</text>
+            <text x="340" y="96"  font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">/api/saju</text>
+            <text x="340" y="110" font-size="10" fill="#5f5638" font-family="JetBrains Mono,monospace">day_master · ten_gods · luck</text>
+            <text x="565" y="73" font-size="14" fill="#6dc375" text-anchor="end" font-family="JetBrains Mono,monospace">⊕</text>
+          </g>
+
+          <!-- mbti / type profile -->
+          <g class="pipe-node" data-pipeline="mbti" style="cursor:pointer">
+            <rect x="320" y="135" width="260" height="60" rx="10" fill="#241319" stroke="#ff7d6b"/>
+            <text x="340" y="158" font-size="13" fill="#ff7d6b" font-weight="700">MBTI 프로필러</text>
+            <text x="340" y="176" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">/api/profile/{type}</text>
+            <text x="340" y="190" font-size="10" fill="#5f5638" font-family="JetBrains Mono,monospace">Ni/Te/Fi/Se · trait map</text>
+            <text x="565" y="153" font-size="14" fill="#ff7d6b" text-anchor="end" font-family="JetBrains Mono,monospace">⊕</text>
+          </g>
+
+          <!-- dream parser -->
+          <g class="pipe-node" data-pipeline="dream" style="cursor:pointer">
+            <rect x="320" y="215" width="260" height="60" rx="10" fill="#1c2333" stroke="#6fb8ff"/>
+            <text x="340" y="238" font-size="13" fill="#6fb8ff" font-weight="700">꿈 해석 (HvDC + Hobson)</text>
+            <text x="340" y="256" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">/api/dream/interpret_v2</text>
+            <text x="340" y="270" font-size="10" fill="#5f5638" font-family="JetBrains Mono,monospace">아르테미도로스 + DreamBank</text>
+            <text x="565" y="233" font-size="14" fill="#6fb8ff" text-anchor="end" font-family="JetBrains Mono,monospace">⊕</text>
+          </g>
+
+          <!-- divination -->
+          <g class="pipe-node" data-pipeline="divination" style="cursor:pointer">
+            <rect x="320" y="295" width="260" height="60" rx="10" fill="#2b2415" stroke="#d4a857"/>
+            <text x="340" y="318" font-size="13" fill="#d4a857" font-weight="700">점복 (타로·주역·화패)</text>
+            <text x="340" y="336" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">/api/tarot · /iching · /hwapae</text>
+            <text x="340" y="350" font-size="10" fill="#5f5638" font-family="JetBrains Mono,monospace">난수 + 카드 의미 매핑</text>
+            <text x="565" y="313" font-size="14" fill="#d4a857" text-anchor="end" font-family="JetBrains Mono,monospace">⊕</text>
+          </g>
+
+          <!-- clinical -->
+          <g class="pipe-node" data-pipeline="clinical" style="cursor:pointer">
+            <rect x="320" y="375" width="260" height="60" rx="10" fill="#1f2731" stroke="#d0d0d0"/>
+            <text x="340" y="398" font-size="13" fill="#d0d0d0" font-weight="700">임상 스크리닝</text>
+            <text x="340" y="416" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">/api/clinical/screening</text>
+            <text x="340" y="430" font-size="10" fill="#5f5638" font-family="JetBrains Mono,monospace">PHQ-9 · GAD-7 · ISI</text>
+            <text x="565" y="393" font-size="14" fill="#d0d0d0" text-anchor="end" font-family="JetBrains Mono,monospace">⊕</text>
+          </g>
+        </g>
+
+        <!-- COLUMN 3 : LLM FUSION -->
+        <g>
+          <rect x="680" y="120" width="240" height="220" rx="16" fill="url(#goldgrad)" opacity=".1"/>
+          <rect x="680" y="120" width="240" height="220" rx="16" fill="none" stroke="#f4d35e" stroke-width="2"/>
+          <text x="700" y="148" font-size="14" fill="#f4d35e" font-weight="800" letter-spacing="2">LLM FUSION CORE</text>
+          <text x="700" y="170" font-size="11" fill="#d4af37" font-family="JetBrains Mono,monospace">/api/saju/fusion</text>
+          <text x="700" y="186" font-size="11" fill="#d4af37" font-family="JetBrains Mono,monospace">/api/saju/ask</text>
+          <text x="700" y="202" font-size="11" fill="#d4af37" font-family="JetBrains Mono,monospace">/api/llm/chat</text>
+
+          <line x1="700" y1="220" x2="900" y2="220" stroke="#6e5a26" stroke-dasharray="3 3"/>
+
+          <text x="700" y="244" font-size="12" fill="#f4d35e" font-weight="700">▸ MiniMax (chat)</text>
+          <text x="700" y="262" font-size="12" fill="#f4d35e" font-weight="700">▸ BizRouter (fallback)</text>
+          <text x="700" y="282" font-size="11" fill="#d4af37" font-family="JetBrains Mono,monospace">prompt + 도메인 컨텍스트 주입</text>
+          <text x="700" y="300" font-size="11" fill="#d4af37" font-family="JetBrains Mono,monospace">system + history (≤10)</text>
+          <text x="700" y="320" font-size="11" fill="#d4af37" font-family="JetBrains Mono,monospace">temperature · max_tokens</text>
+        </g>
+
+        <!-- COLUMN 4 : SAFETY -->
+        <g>
+          <rect x="960" y="55"  width="240" height="60" rx="10" fill="#231319" stroke="#ff7a7a"/>
+          <text x="980" y="80"  font-size="13" fill="#ff7a7a" font-weight="700">위기 탐지</text>
+          <text x="980" y="100" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">crisis_alert · cathartic</text>
+
+          <rect x="960" y="135" width="240" height="60" rx="10" fill="#1f2731" stroke="#d0d0d0"/>
+          <text x="980" y="160" font-size="13" fill="#d0d0d0" font-weight="700">법적 고지 삽입</text>
+          <text x="980" y="180" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">legal_notice (의료/법률/투자)</text>
+
+          <rect x="960" y="215" width="240" height="60" rx="10" fill="#2b2415" stroke="#d4a857"/>
+          <text x="980" y="240" font-size="13" fill="#d4a857" font-weight="700">레이트 리밋 · 캐시</text>
+          <text x="980" y="260" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">60 rpm · image/music cache</text>
+
+          <rect x="960" y="295" width="240" height="60" rx="10" fill="#13251a" stroke="#6dc375"/>
+          <text x="980" y="320" font-size="13" fill="#6dc375" font-weight="700">메트릭 적재</text>
+          <text x="980" y="340" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">/metrics · /api/analytics</text>
+        </g>
+
+        <!-- COLUMN 5 : OUTPUT -->
+        <g>
+          <rect x="1220" y="135" width="140" height="180" rx="14" fill="#172147" stroke="#f4d35e" stroke-width="2"/>
+          <text x="1240" y="162" font-size="14" fill="#f4d35e" font-weight="800">RESPONSE</text>
+          <text x="1240" y="190" font-size="12" fill="#e8d9b0">▸ 본문 텍스트</text>
+          <text x="1240" y="210" font-size="12" fill="#e8d9b0">▸ 명식·점괘</text>
+          <text x="1240" y="230" font-size="12" fill="#e8d9b0">▸ crisis flag</text>
+          <text x="1240" y="250" font-size="12" fill="#e8d9b0">▸ legal_notice</text>
+          <text x="1240" y="270" font-size="12" fill="#e8d9b0">▸ turns_used</text>
+          <text x="1240" y="290" font-size="12" fill="#e8d9b0">▸ lang</text>
+        </g>
+
+        <!-- EDGES : input -> engines -->
+        <g fill="none" stroke="#6e5a26" stroke-width="1.5" marker-end="url(#arr)">
+          <path class="edge" d="M240 85   C 280 85,280 85,320 85"/>
+          <path class="edge" d="M240 165  C 280 165,280 165,320 165"/>
+          <path class="edge" d="M240 245  C 280 245,280 245,320 245"/>
+          <path class="edge" d="M240 325  C 280 325,280 325,320 325"/>
+          <path class="edge" d="M240 325  C 280 325,280 405,320 405"/>
+        </g>
+
+        <!-- EDGES : engines -> fusion -->
+        <g fill="none" stroke="#f4d35e" stroke-width="1.7" marker-end="url(#arrgold)" opacity=".85">
+          <path class="edge" id="e-saju"     d="M580 85   C 630 85,630 200,680 200"/>
+          <path class="edge" id="e-mbti"     d="M580 165  C 630 165,630 215,680 215"/>
+          <path class="edge" id="e-dream"    d="M580 245  C 630 245,630 235,680 235"/>
+          <path class="edge" id="e-div"      d="M580 325  C 630 325,630 255,680 255"/>
+          <path class="edge" id="e-clinical" d="M580 405  C 630 405,630 280,680 280"/>
+        </g>
+
+        <!-- EDGES : fusion -> safety -->
+        <g fill="none" stroke="#f4d35e" stroke-width="1.7" marker-end="url(#arrgold)" opacity=".85">
+          <path class="edge" d="M920 200 C 940 200,940 85,960 85"/>
+          <path class="edge" d="M920 220 C 940 220,940 165,960 165"/>
+          <path class="edge" d="M920 240 C 940 240,940 245,960 245"/>
+          <path class="edge" d="M920 280 C 940 280,940 325,960 325"/>
+        </g>
+
+        <!-- EDGES : safety -> output -->
+        <g fill="none" stroke="#6e5a26" stroke-width="1.5" marker-end="url(#arr)">
+          <path class="edge" d="M1200 85  C 1210 85,1210 200,1220 200"/>
+          <path class="edge" d="M1200 165 C 1210 165,1210 215,1220 215"/>
+          <path class="edge" d="M1200 245 C 1210 245,1210 235,1220 235"/>
+          <path class="edge" d="M1200 325 C 1210 325,1210 260,1220 260"/>
+        </g>
+
+      </svg>
+
+      <div class="legend">
+        <span><i style="background:#6dc375"></i>사주(명리)</span>
+        <span><i style="background:#ff7d6b"></i>심리·MBTI</span>
+        <span><i style="background:#6fb8ff"></i>꿈 해석</span>
+        <span><i style="background:#d4a857"></i>점복</span>
+        <span><i style="background:#d0d0d0"></i>임상/안전</span>
+        <span><i style="background:#f4d35e"></i>LLM Fusion Path</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───── PROOF OF GROUNDING ───── -->
+  <section>
+    <div class="sec-head">
+      <div class="num">02 ─ PROOF OF GROUNDING</div>
+      <h2>"LLM이 사주를 아는 게 아닙니다"</h2>
+      <div class="hint">동일 입력으로 3가지를 동시 호출 · LLM은 엔진 데이터를 받아 해석만 합니다</div>
+    </div>
+
+    <div class="proof-banner">
+      <div>
+        <div class="big">🛡 LLM 학습 지식 ≠ 우리 서비스 응답</div>
+        <div class="sub">
+          좌측 <b style="color:#6dc375">결정론적 명식 엔진</b>은 LLM이 아닌 순수 알고리즘으로 천간·지지·십성·대운·신살을 계산합니다.<br>
+          중앙 <b style="color:#f4d35e">Grounded</b>는 그 결과를 LLM에 주입해 해석하고, 우측 <b style="color:#ff7a7a">LLM-only</b>는 같은 질문을 엔진 없이 LLM에만 던집니다.
+        </div>
+      </div>
+      <div class="vs">
+        <b>GROUNDED</b>: engine.json → LLM<br>
+        <i>NAKED LLM</i>: prompt → LLM (no engine)
+      </div>
+    </div>
+
+    <div class="proof-input">
+      <div>
+        <label>생년월일시 (dt_local)</label>
+        <input id="p-dt" type="text" value="1990-06-15T12:00:00" />
+      </div>
+      <div>
+        <label>성별</label>
+        <select id="p-gender"><option value="M">男</option><option value="F">女</option></select>
+      </div>
+      <div>
+        <label>MBTI</label>
+        <select id="p-mbti">
+          <option>INTJ</option><option>INTP</option><option>ENTJ</option><option>ENTP</option>
+          <option>INFJ</option><option>INFP</option><option>ENFJ</option><option>ENFP</option>
+          <option>ISTJ</option><option>ISFJ</option><option>ESTJ</option><option>ESFJ</option>
+          <option>ISTP</option><option>ISFP</option><option>ESTP</option><option>ESFP</option>
+        </select>
+      </div>
+      <div style="flex:1">
+        <label>질문</label>
+        <textarea id="p-q">이 사람의 일주와 강한 오행은 무엇이며, 올해 어떤 흐름인가요?</textarea>
+      </div>
+      <button id="p-run">▶ 3종 동시 호출 비교</button>
+    </div>
+
+    <div class="proof-timeline" id="p-timeline">
+      <div class="t" data-pt="0">1 · 엔진 호출</div>
+      <div class="t" data-pt="1">2 · 엔진 출력 추출</div>
+      <div class="t" data-pt="2">3 · Grounded 응답</div>
+      <div class="t" data-pt="3">4 · LLM-only 응답</div>
+      <div class="t" data-pt="4">5 · 키워드 매칭</div>
+    </div>
+
+    <div class="proof-grid">
+      <!-- COL 1 : ENGINE -->
+      <div class="proof-col engine">
+        <span class="badge">DETERMINISTIC</span>
+        <h3>① 명식 엔진 출력</h3>
+        <div class="why">/api/saju · 동일 입력 → 항상 동일 결과 · LLM 미사용</div>
+        <div class="body" id="p-engine"><span class="placeholder">[실행] 버튼을 누르면 엔진이 천간/지지/십성/대운을 결정론적으로 계산합니다.</span></div>
+      </div>
+
+      <!-- COL 2 : GROUNDED -->
+      <div class="proof-col grounded">
+        <span class="badge">GROUNDED LLM</span>
+        <h3>② Grounded — 엔진 데이터 주입</h3>
+        <div class="why">/api/saju/ask · 엔진 JSON을 컨텍스트로 LLM 해석</div>
+        <div class="body" id="p-grounded"><span class="placeholder">엔진이 뽑은 일주·오행·대운이 응답에 그대로 등장합니다. 하이라이트로 확인하세요.</span></div>
+        <div class="scorebar"><span>엔진값 출현: <b id="p-hits-g">–</b></span><span>응답 길이: <b id="p-len-g">–</b></span></div>
+      </div>
+
+      <!-- COL 3 : NAKED LLM -->
+      <div class="proof-col naked">
+        <span class="badge">NAKED LLM</span>
+        <h3>③ LLM-only — 엔진 없이</h3>
+        <div class="why">/api/llm/chat · 같은 질문을 그대로 LLM에 · 엔진 데이터 없음</div>
+        <div class="body" id="p-naked"><span class="placeholder">엔진 데이터가 없으므로 LLM은 일반론·환각·"정보가 없다"를 응답합니다.</span></div>
+        <div class="scorebar red"><span>엔진값 출현: <b id="p-hits-n">–</b></span><span>응답 길이: <b id="p-len-n">–</b></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIVE DEMOS -->
+  <section>
+    <div class="sec-head">
+      <div class="num">03 ─ LIVE DEMO</div>
+      <h2>실시간 호출 · 단계별 타임라인</h2>
+      <div class="hint">각 카드의 [실행] 버튼이 실제 프로덕션 API를 호출합니다</div>
+    </div>
+
+    <div class="demo-grid">
+
+      <!-- DEMO 1 : SAJU FUSION -->
+      <div class="demo" data-demo="fusion">
+        <h3>① 사주 × MBTI 융합</h3>
+        <p class="desc">전통 명리학의 일주·십성과 MBTI 기능 스택을 LLM으로 융합 해석합니다.</p>
+        <div class="endpoint">POST /api/saju/fusion</div>
+        <div class="form">
+          <label>생년월일시 (dt_local)</label>
+          <input id="f-dt" type="text" value="1990-06-15T12:00:00" />
+          <div class="row">
+            <div>
+              <label>성별</label>
+              <select id="f-gender"><option value="M">男</option><option value="F">女</option></select>
+            </div>
+            <div>
+              <label>MBTI</label>
+              <select id="f-mbti">
+                <option>INTJ</option><option>INTP</option><option>ENTJ</option><option>ENTP</option>
+                <option>INFJ</option><option>INFP</option><option>ENFJ</option><option>ENFP</option>
+                <option>ISTJ</option><option>ISFJ</option><option>ESTJ</option><option>ESFJ</option>
+                <option>ISTP</option><option>ISFP</option><option>ESTP</option><option>ESFP</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <button class="go" data-run="fusion">▶ 융합 해석 실행</button>
+        <div class="stages" id="stages-fusion">
+          <div class="stage" data-s="0"><div class="ix">1</div><div class="label">입력 검증</div><div class="ms"></div></div>
+          <div class="stage" data-s="1"><div class="ix">2</div><div class="label">사주 명식 계산 (병렬)</div><div class="ms"></div></div>
+          <div class="stage" data-s="2"><div class="ix">3</div><div class="label">MBTI 프로필 매핑</div><div class="ms"></div></div>
+          <div class="stage" data-s="3"><div class="ix">4</div><div class="label">LLM 융합 프롬프트 합성</div><div class="ms"></div></div>
+          <div class="stage" data-s="4"><div class="ix">5</div><div class="label">MiniMax/BizRouter 호출</div><div class="ms"></div></div>
+          <div class="stage" data-s="5"><div class="ix">6</div><div class="label">법적 고지 부착 → 응답</div><div class="ms"></div></div>
+        </div>
+        <div class="result" id="result-fusion"></div>
+      </div>
+
+      <!-- DEMO 2 : DREAM V2 -->
+      <div class="demo" data-demo="dream">
+        <h3>② 꿈 해석 (HvDC 다층 분석)</h3>
+        <p class="desc">아르테미도로스 분류 · Hobson 활성-합성 가설 · DreamBank 규범 비교를 결합한 LLM 해석.</p>
+        <div class="endpoint">POST /api/dream/interpret_v2</div>
+        <div class="form">
+          <label>dream_text</label>
+          <textarea id="d-text">어젯밤에 하늘을 자유롭게 날아다니는 꿈을 꿨다. 도시 위를 천천히 떠다녔는데 두려움은 없었다.</textarea>
+        </div>
+        <button class="go" data-run="dream">▶ 꿈 해석 실행</button>
+        <div class="stages" id="stages-dream">
+          <div class="stage" data-s="0"><div class="ix">1</div><div class="label">텍스트 정제 · 토큰화</div><div class="ms"></div></div>
+          <div class="stage" data-s="1"><div class="ix">2</div><div class="label">HvDC 정서 점수 산출</div><div class="ms"></div></div>
+          <div class="stage" data-s="2"><div class="ix">3</div><div class="label">Hobson 기괴성 평가</div><div class="ms"></div></div>
+          <div class="stage" data-s="3"><div class="ix">4</div><div class="label">DreamBank 규범 대비</div><div class="ms"></div></div>
+          <div class="stage" data-s="4"><div class="ix">5</div><div class="label">LLM 통합 해석</div><div class="ms"></div></div>
+          <div class="stage" data-s="5"><div class="ix">6</div><div class="label">위기 탐지 게이트</div><div class="ms"></div></div>
+        </div>
+        <div class="result" id="result-dream"></div>
+      </div>
+
+      <!-- DEMO 3 : SAJU ASK -->
+      <div class="demo" data-demo="ask">
+        <h3>③ 자유 질의 (멀티턴)</h3>
+        <p class="desc">사용자의 사주를 컨텍스트로 자유 질문을 던지면 최대 10턴까지 LLM이 응답합니다.</p>
+        <div class="endpoint">POST /api/saju/ask</div>
+        <div class="form">
+          <label>질문</label>
+          <textarea id="a-q">올해 가장 신경 써야 할 부분이 뭘까?</textarea>
+          <div class="row">
+            <div>
+              <label>dt_local</label>
+              <input id="a-dt" type="text" value="1990-06-15T12:00:00" />
+            </div>
+            <div>
+              <label>성별</label>
+              <select id="a-gender"><option value="M">男</option><option value="F">女</option></select>
+            </div>
+          </div>
+        </div>
+        <button class="go" data-run="ask">▶ 질의 실행</button>
+        <div class="stages" id="stages-ask">
+          <div class="stage" data-s="0"><div class="ix">1</div><div class="label">사주 컨텍스트 빌드</div><div class="ms"></div></div>
+          <div class="stage" data-s="1"><div class="ix">2</div><div class="label">질문 정규화</div><div class="ms"></div></div>
+          <div class="stage" data-s="2"><div class="ix">3</div><div class="label">시스템 프롬프트 주입</div><div class="ms"></div></div>
+          <div class="stage" data-s="3"><div class="ix">4</div><div class="label">LLM 응답 생성</div><div class="ms"></div></div>
+          <div class="stage" data-s="4"><div class="ix">5</div><div class="label">turn 카운터 갱신</div><div class="ms"></div></div>
+          <div class="stage" data-s="5"><div class="ix">6</div><div class="label">법적 고지 부착</div><div class="ms"></div></div>
+        </div>
+        <div class="result" id="result-ask"></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- METRICS -->
+  <section>
+    <div class="sec-head">
+      <div class="num">04 ─ TELEMETRY</div>
+      <h2>실시간 운영 지표</h2>
+      <div class="hint">자동 갱신 · 매 10초</div>
+    </div>
+    <div class="metrics">
+      <div class="met"><div class="k">REQUESTS_TOTAL</div><div class="v" id="m-req">…</div><div class="u">누적 요청 수</div></div>
+      <div class="met"><div class="k">ERROR_RATE</div><div class="v" id="m-err">…</div><div class="u">5xx/4xx 비율</div></div>
+      <div class="met"><div class="k">P50 / P95 LATENCY</div><div class="v small" id="m-p95">…</div><div class="u">밀리초</div></div>
+      <div class="met"><div class="k">DREAM V2 CALLS</div><div class="v" id="m-dream">…</div><div class="u">위기 차단 <span id="m-crisis">0</span></div></div>
+      <div class="met"><div class="k">IMAGE CACHE HIT</div><div class="v" id="m-imgcache">…</div><div class="u">생성 비용 절감률</div></div>
+      <div class="met"><div class="k">MUSIC CACHE HIT</div><div class="v" id="m-musccache">…</div><div class="u">음악 생성 캐시</div></div>
+      <div class="met"><div class="k">RATE LIMITED IPs</div><div class="v" id="m-rl">…</div><div class="u">60 rpm 차단</div></div>
+      <div class="met"><div class="k">EST. COST</div><div class="v small" id="m-cost">…</div><div class="u">누적 LLM 비용(USD)</div></div>
+    </div>
+
+    <div class="node-stack">
+      <div class="pnode"><b>입력</b><small>dt_local · mbti · question</small></div>
+      <div class="pnode"><b>도메인 엔진</b><small>saju · dream · clinical</small></div>
+      <div class="pnode"><b>LLM Fusion</b><small>MiniMax · BizRouter</small></div>
+      <div class="pnode"><b>안전성</b><small>crisis · legal</small></div>
+      <div class="pnode"><b>응답 · 메트릭</b><small>JSON + /metrics</small></div>
+    </div>
+  </section>
+
+  <footer>
+    <div>API: <code>https://saju-mbti-fusion-production.up.railway.app</code></div>
+    <div>Spec: <code>50 endpoints · 40 schemas</code> · Live presentation view · 月下夢</div>
+  </footer>
+</div>
+
+<script>
+const API = "https://saju-mbti-fusion-production.up.railway.app";
+
+// ─────────── HEADER STATUS ───────────
+async function refreshHeader(){
+  try{
+    const [h, m] = await Promise.all([
+      fetch(API+"/api/health").then(r=>r.json()),
+      fetch(API+"/metrics").then(r=>r.json())
+    ]);
+    document.getElementById("h-status").textContent = h.status === "ok" ? "OPERATIONAL" : "DEGRADED";
+    document.getElementById("h-req").textContent = m.requests_total ?? "–";
+    document.getElementById("h-avg").textContent = (m.avg_duration_ms ?? 0).toFixed(1);
+    document.getElementById("h-p95").textContent = (m.p95_ms ?? 0).toFixed(1);
+  }catch(e){
+    document.getElementById("h-status").textContent = "OFFLINE";
+  }
+}
+
+// ─────────── METRIC PANEL ───────────
+async function refreshMetrics(){
+  try{
+    const [m, a] = await Promise.all([
+      fetch(API+"/metrics").then(r=>r.json()),
+      fetch(API+"/api/analytics").then(r=>r.json())
+    ]);
+    document.getElementById("m-req").textContent = m.requests_total ?? "–";
+    document.getElementById("m-err").textContent = ((m.error_rate ?? 0)*100).toFixed(2) + "%";
+    document.getElementById("m-p95").textContent =
+      (m.p50_ms ?? 0).toFixed(1) + " / " + (m.p95_ms ?? 0).toFixed(1);
+    document.getElementById("m-dream").textContent = a.dream_v2_calls ?? 0;
+    document.getElementById("m-crisis").textContent = a.dream_v2_crisis_blocked ?? 0;
+    document.getElementById("m-imgcache").textContent = ((a.cache_image_hit_rate ?? 0)*100).toFixed(1) + "%";
+    document.getElementById("m-musccache").textContent = ((a.cache_music_hit_rate ?? 0)*100).toFixed(1) + "%";
+    document.getElementById("m-rl").textContent = a.rate_limited_ips ?? 0;
+    document.getElementById("m-cost").textContent = "$" + (a.estimated_cost_usd ?? 0).toFixed(4);
+  }catch(e){}
+}
+
+// ─────────── STAGE TIMELINE ───────────
+function setStage(demo, idx, state, ms){
+  const el = document.querySelector(`#stages-${demo} [data-s="${idx}"]`);
+  if(!el) return;
+  el.classList.remove("active","done","err");
+  el.classList.add(state);
+  if(ms!=null) el.querySelector(".ms").textContent = "+" + ms + "ms";
+}
+function resetStages(demo){
+  document.querySelectorAll(`#stages-${demo} .stage`).forEach(s=>{
+    s.classList.remove("active","done","err");
+    s.querySelector(".ms").textContent="";
+  });
+}
+function highlightEdges(ids, on){
+  ids.forEach(id=>{
+    const e = document.getElementById(id);
+    if(e) e.classList.toggle("flowing", !!on);
+  });
+}
+
+// ─────────── DEMO RUNNERS ───────────
+async function runFusion(){
+  resetStages("fusion");
+  const out = document.getElementById("result-fusion"); out.textContent = "";
+  const btn = document.querySelector('[data-run="fusion"]'); btn.disabled = true;
+  highlightEdges(["e-saju","e-mbti"], true);
+  const t0 = performance.now();
+  try{
+    setStage("fusion",0,"active");
+    const dt = document.getElementById("f-dt").value.trim();
+    const gender = document.getElementById("f-gender").value;
+    const mbti = document.getElementById("f-mbti").value;
+    if(!dt) throw new Error("dt_local 필요");
+    setStage("fusion",0,"done", Math.round(performance.now()-t0));
+    setStage("fusion",1,"active");
+    await sleep(120);
+    setStage("fusion",1,"done", Math.round(performance.now()-t0));
+    setStage("fusion",2,"active");
+    await sleep(80);
+    setStage("fusion",2,"done", Math.round(performance.now()-t0));
+    setStage("fusion",3,"active");
+    await sleep(80);
+    setStage("fusion",3,"done", Math.round(performance.now()-t0));
+    setStage("fusion",4,"active");
+    const res = await fetch(API+"/api/saju/fusion",{
+      method:"POST",headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({saju:{dt_local:dt,gender}, mbti})
+    });
+    const data = await res.json();
+    setStage("fusion",4,"done", Math.round(performance.now()-t0));
+    setStage("fusion",5,"active");
+    await sleep(60);
+    setStage("fusion",5,"done", Math.round(performance.now()-t0));
+    out.classList.remove("json");
+    out.textContent = data.text || JSON.stringify(data,null,2);
+  }catch(e){
+    setStage("fusion",4,"err");
+    out.classList.add("json");
+    out.textContent = "ERROR: " + e.message;
+  }finally{
+    highlightEdges(["e-saju","e-mbti"], false);
+    btn.disabled = false;
+  }
+}
+
+async function runDream(){
+  resetStages("dream");
+  const out = document.getElementById("result-dream"); out.textContent = "";
+  const btn = document.querySelector('[data-run="dream"]'); btn.disabled = true;
+  highlightEdges(["e-dream","e-clinical"], true);
+  const t0 = performance.now();
+  try{
+    const txt = document.getElementById("d-text").value.trim();
+    if(!txt) throw new Error("dream_text 비어있음");
+    for(let i=0;i<4;i++){
+      setStage("dream",i,"active");
+      await sleep(90+i*40);
+      setStage("dream",i,"done", Math.round(performance.now()-t0));
+    }
+    setStage("dream",4,"active");
+    const res = await fetch(API+"/api/dream/interpret_v2",{
+      method:"POST",headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({dream_text:txt})
+    });
+    const data = await res.json();
+    setStage("dream",4,"done", Math.round(performance.now()-t0));
+    setStage("dream",5,"active");
+    await sleep(60);
+    setStage("dream",5,"done", Math.round(performance.now()-t0));
+    out.classList.remove("json");
+    out.textContent = data.text || data.interpretation || JSON.stringify(data,null,2);
+  }catch(e){
+    setStage("dream",4,"err");
+    out.classList.add("json");
+    out.textContent = "ERROR: " + e.message;
+  }finally{
+    highlightEdges(["e-dream","e-clinical"], false);
+    btn.disabled = false;
+  }
+}
+
+async function runAsk(){
+  resetStages("ask");
+  const out = document.getElementById("result-ask"); out.textContent = "";
+  const btn = document.querySelector('[data-run="ask"]'); btn.disabled = true;
+  highlightEdges(["e-saju"], true);
+  const t0 = performance.now();
+  try{
+    const q  = document.getElementById("a-q").value.trim();
+    const dt = document.getElementById("a-dt").value.trim();
+    const gender = document.getElementById("a-gender").value;
+    if(!q) throw new Error("질문 필요");
+    for(let i=0;i<3;i++){
+      setStage("ask",i,"active");
+      await sleep(80+i*30);
+      setStage("ask",i,"done", Math.round(performance.now()-t0));
+    }
+    setStage("ask",3,"active");
+    const res = await fetch(API+"/api/saju/ask",{
+      method:"POST",headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({question:q, saju:{dt_local:dt,gender}})
+    });
+    const data = await res.json();
+    setStage("ask",3,"done", Math.round(performance.now()-t0));
+    setStage("ask",4,"active");
+    await sleep(50);
+    setStage("ask",4,"done", Math.round(performance.now()-t0));
+    setStage("ask",5,"active");
+    await sleep(50);
+    setStage("ask",5,"done", Math.round(performance.now()-t0));
+    out.classList.remove("json");
+    const tail = data.legal_notice ? "\n\n" + data.legal_notice : "";
+    out.textContent = (data.answer || JSON.stringify(data,null,2)) + tail
+      + (data.turns_used ? `\n\n[turns_used: ${data.turns_used}/${data.turns_max}]` : "");
+  }catch(e){
+    setStage("ask",3,"err");
+    out.classList.add("json");
+    out.textContent = "ERROR: " + e.message;
+  }finally{
+    highlightEdges(["e-saju"], false);
+    btn.disabled = false;
+  }
+}
+
+function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+// ─────────── WIRING ───────────
+document.querySelectorAll("[data-run]").forEach(b=>{
+  b.addEventListener("click", ()=>{
+    const k = b.getAttribute("data-run");
+    if(k==="fusion") runFusion();
+    if(k==="dream")  runDream();
+    if(k==="ask")    runAsk();
+  });
+});
+
+refreshHeader();
+refreshMetrics();
+setInterval(refreshHeader, 10000);
+setInterval(refreshMetrics, 10000);
+
+// ─────────────────────────────────────────────────────
+// PROOF OF GROUNDING — 3종 동시 호출 + 키워드 매칭
+// ─────────────────────────────────────────────────────
+function setPT(idx, state){
+  const el = document.querySelector(`#p-timeline [data-pt="${idx}"]`);
+  if(!el) return;
+  el.classList.remove("on","done","err");
+  if(state) el.classList.add(state);
+}
+function resetPT(){
+  document.querySelectorAll("#p-timeline .t").forEach(el=>{
+    el.classList.remove("on","done","err");
+  });
+}
+
+// engine JSON에서 LLM 응답에 박혔는지 확인할 "결정성 키워드" 추출
+function extractEngineKeys(engine){
+  const keys = new Set();
+  const push = v => {
+    if(typeof v === "string" && v.trim()){
+      // 단순 문자열은 키로 직접
+      keys.add(v.trim());
+    }
+  };
+  // 알리아스 영역: day_master_name, strongest, weakest, headline 등
+  const a = engine.alias || {};
+  push(a.day_master_name);
+  push(a.strongest);
+  push(a.weakest);
+  push(a.headline);
+  push(a.day_master_trait);
+  push(a.suffix);
+  // day/month/year/hour의 한글 부분만
+  ["day","month","year","hour"].forEach(k=>{
+    const v = engine[k];
+    if(typeof v === "string"){
+      const ko = v.replace(/\([^)]+\)/g,"").trim();
+      if(ko) keys.add(ko);
+    }
+  });
+  // 천간 단일자
+  if(engine.day_master) keys.add(engine.day_master);
+  // 패턴
+  if(engine.pattern) keys.add(engine.pattern);
+  // luck_cycle의 첫 ganzhi 두 개
+  (engine.luck_cycle||[]).slice(0,3).forEach(lc=>{
+    if(lc.ganzhi){
+      const ko = lc.ganzhi.replace(/\([^)]+\)/g,"").trim();
+      if(ko) keys.add(ko);
+    }
+  });
+  // 오행 분포 키들
+  Object.keys(engine.wuxing_dist || {}).forEach(k=>keys.add(k));
+  // 십성
+  Object.keys(engine.ten_gods || {}).forEach(k=>{ if(k.length<=4) keys.add(k); });
+  // 너무 짧거나 일반적 단어 제거
+  return [...keys].filter(k=>k && k.length>=1 && k.length<=12);
+}
+
+function escapeHtml(s){
+  return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+function highlightKeys(text, keys, cls){
+  let html = escapeHtml(text);
+  const hits = {};
+  // 긴 키워드 우선 (substring 충돌 방지)
+  const sorted = [...keys].sort((a,b)=>b.length-a.length);
+  sorted.forEach(k=>{
+    if(!k) return;
+    const ek = escapeHtml(k).replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+    const re = new RegExp(ek,"g");
+    let count = 0;
+    html = html.replace(re, m => { count++; return `<span class="${cls}">${m}</span>`; });
+    if(count) hits[k] = count;
+  });
+  return { html, hits, total: Object.values(hits).reduce((a,b)=>a+b,0) };
+}
+
+function renderEngineSummary(engine){
+  const a = engine.alias || {};
+  const wux = engine.wuxing_dist || {};
+  const lc = engine.luck_cycle || [];
+  const hot = (k,v)=>`<div><span class="kchip hot">${escapeHtml(k)}</span> ${escapeHtml(String(v))}</div>`;
+  const cool = (k,v)=>`<div><span class="kchip">${escapeHtml(k)}</span> ${escapeHtml(String(v))}</div>`;
+  const wuxLine = Object.entries(wux).map(([k,v])=>`<span class="kchip">${escapeHtml(k)}:${typeof v==='number'?v.toFixed(2):v}</span>`).join(" ");
+  const lcLine  = lc.slice(0,4).map(x=>`<span class="kchip">${escapeHtml((x.ganzhi||'').replace(/\([^)]+\)/g,'').trim())}·${x.start_age}세</span>`).join(" ");
+  return [
+    hot("day_master", engine.day_master || a.day_master_name || ""),
+    hot("strongest 오행", a.strongest || ""),
+    cool("weakest 오행", a.weakest || ""),
+    cool("pattern", engine.pattern || ""),
+    cool("day(일주)", engine.day || ""),
+    cool("month",   engine.month || ""),
+    cool("year",    engine.year || ""),
+    cool("hour",    engine.hour || ""),
+    `<div style="margin-top:8px"><span class="kchip">wuxing_dist</span> ${wuxLine}</div>`,
+    `<div style="margin-top:6px"><span class="kchip">luck_cycle</span> ${lcLine}</div>`,
+    a.summary ? `<div style="margin-top:10px;color:#a6e0aa;font-family:'Noto Serif KR',serif;font-size:12.5px;line-height:1.6">${escapeHtml(a.summary)}</div>` : ""
+  ].join("");
+}
+
+async function runProof(){
+  const btn = document.getElementById("p-run");
+  btn.disabled = true;
+  resetPT();
+  const dt = document.getElementById("p-dt").value.trim();
+  const gender = document.getElementById("p-gender").value;
+  const mbti = document.getElementById("p-mbti").value;
+  const q  = document.getElementById("p-q").value.trim();
+
+  const engineEl = document.getElementById("p-engine");
+  const groundedEl = document.getElementById("p-grounded");
+  const nakedEl    = document.getElementById("p-naked");
+
+  engineEl.innerHTML   = '<span class="placeholder">계산 중…</span>';
+  groundedEl.innerHTML = '<span class="placeholder">대기 중…</span>';
+  nakedEl.innerHTML    = '<span class="placeholder">대기 중…</span>';
+  document.getElementById("p-hits-g").textContent = "–";
+  document.getElementById("p-hits-n").textContent = "–";
+  document.getElementById("p-len-g").textContent = "–";
+  document.getElementById("p-len-n").textContent = "–";
+
+  try{
+    // Step 1: 엔진 호출 (결정론적)
+    setPT(0,"on");
+    const engRes = await fetch(API+"/api/saju",{
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({dt_local: dt, gender})
+    });
+    const engine = await engRes.json();
+    setPT(0,"done");
+
+    // Step 2: 엔진 출력 표시 + 키 추출
+    setPT(1,"on");
+    engineEl.innerHTML = renderEngineSummary(engine);
+    const keys = extractEngineKeys(engine);
+    setPT(1,"done");
+
+    // Step 3 & 4: Grounded + Naked LLM 병렬
+    setPT(2,"on"); setPT(3,"on");
+    groundedEl.innerHTML = '<span class="placeholder">LLM 응답 생성 중… (engine.json 컨텍스트 주입)</span>';
+    nakedEl.innerHTML    = '<span class="placeholder">LLM 응답 생성 중… (엔진 없이 동일 질문)</span>';
+
+    // ── Grounded: 엔진이 뽑은 명식을 질문에 명시적으로 합성
+    const a = engine.alias || {};
+    const wuxStr = Object.entries(engine.wuxing_dist||{}).map(([k,v])=>`${k}:${typeof v==='number'?v.toFixed(2):v}`).join(", ");
+    const lcStr  = (engine.luck_cycle||[]).slice(0,3).map(x=>(x.ganzhi||'').replace(/\([^)]+\)/g,'').trim()+`(${x.start_age}세~)`).join(", ");
+    const engineBrief =
+      `[이 사람의 명식 (결정론적 엔진 산출)]\n`+
+      `- 일간(day_master): ${engine.day_master||a.day_master_name||''}\n`+
+      `- 일주(day): ${engine.day||''}, 월주: ${engine.month||''}, 년주: ${engine.year||''}, 시주: ${engine.hour||''}\n`+
+      `- 가장 강한 오행: ${a.strongest||''}, 가장 약한 오행: ${a.weakest||''}\n`+
+      `- 격(pattern): ${engine.pattern||''}\n`+
+      `- 오행분포: ${wuxStr}\n`+
+      `- 대운 흐름: ${lcStr}\n`+
+      `- 헤드라인: ${a.headline||''}\n`+
+      `- MBTI: ${mbti}\n`;
+    const groundedQ = engineBrief + `\n[질문]\n${q}\n위 명식 데이터를 직접 인용해서 4~6문장으로 답해주세요.`;
+
+    const [gRes, nRes] = await Promise.allSettled([
+      fetch(API+"/api/saju/ask",{
+        method:"POST", headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({question: groundedQ, saju:{dt_local: dt, gender}})
+      }).then(async r=>{ const t = await r.text(); try{return JSON.parse(t);}catch{return {answer:t}} }),
+      fetch(API+"/api/llm/chat",{
+        method:"POST", headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({
+          prompt: q + `\n\n(참고 입력: MBTI ${mbti}, 생년월일시 ${dt}, 성별 ${gender})\n한국어로 4~6문장으로 답하세요. 사주를 모르면 모른다고 하세요.`,
+          system: "당신은 사주·운세 해석가입니다. 명식 계산 도구는 없습니다. 사용자가 제공한 정보만 사용하세요.",
+          max_tokens: 500
+        })
+      }).then(async r=>{ const t = await r.text(); try{return JSON.parse(t);}catch{return {text:t}} })
+    ]);
+
+    let groundedText = "";
+    if(gRes.status === "fulfilled"){
+      const v = gRes.value;
+      groundedText = v.answer || v.text || (typeof v === "string" ? v : JSON.stringify(v));
+      setPT(2,"done");
+    }else{
+      groundedText = "(grounded 호출 실패: "+gRes.reason+")";
+      setPT(2,"err");
+    }
+
+    let nakedText = "";
+    if(nRes.status === "fulfilled"){
+      const v = nRes.value;
+      nakedText = v.text || v.answer || v.message || v.content || (typeof v === "string" ? v : JSON.stringify(v));
+      setPT(3,"done");
+    }else{
+      nakedText = "(naked LLM 호출 실패: "+nRes.reason+")";
+      setPT(3,"err");
+    }
+
+    // Step 5: 키워드 매칭 하이라이트
+    setPT(4,"on");
+    const gh = highlightKeys(groundedText, keys, "gh");
+    const nh = highlightKeys(nakedText,    keys, "gh"); // naked에도 동일 클래스로 보여서 비교가 명확
+
+    groundedEl.innerHTML = gh.html;
+    nakedEl.innerHTML    = nh.html;
+
+    document.getElementById("p-hits-g").textContent = gh.total + " 개";
+    document.getElementById("p-hits-n").textContent = nh.total + " 개";
+    document.getElementById("p-len-g").textContent  = groundedText.length + " 자";
+    document.getElementById("p-len-n").textContent  = nakedText.length + " 자";
+    setPT(4,"done");
+
+  }catch(e){
+    engineEl.innerHTML = '<span class="placeholder" style="color:#ff7a7a">ERROR: '+escapeHtml(e.message)+'</span>';
+  }finally{
+    btn.disabled = false;
+  }
+}
+document.getElementById("p-run").addEventListener("click", runProof);
+
+/* ─────────────────────────────────────────────────────────
+ * 파이프라인 노드 클릭 → 세부 단계 모달
+ * ───────────────────────────────────────────────────────── */
+const PIPELINES = {
+  saju: {
+    title: "사주 엔진 파이프라인",
+    hint: "/api/saju · 결정론 80% + LLM 자연어 1회",
+    tagClass: "saju",
+    steps: [
+      {n:1, t:"0s",    title:"사용자 입력 5필드", desc:"이름·생년월일시·성별·시간 미상 시 12지 힌트. 한글 이름은 자동 성·이름 분리 (대법원 9389한자).", meta:"front step-input"},
+      {n:2, t:"0.1s",  title:"절기 12개 정밀 계산", desc:"황경 → JD 변환 + 뉴턴 반복. 사주 연도 입춘 기준 결정.", meta:"calcSolarTerms · 클라이언트 JS"},
+      {n:3, t:"0.2s",  title:"사주 4주(年月日時) 천간·지지 확정", desc:"60갑자 결정론. 日柱·日干 = 본원. 같은 입력 = 같은 출력 100%.", meta:"ADR-002 옵션 A 디폴트", star:true},
+      {n:4, t:"0.3s",  title:"analyzeSaju 4중 분석", desc:"십성·운성·신살·장간·오행분포 + 용신/기신 후보 (옵션 B 억부론 이재승 2019 KCI).", meta:"ADR-002·015·031", adr:["ADR-002","ADR-015","ADR-031"]},
+      {n:5, t:"0.4s",  title:"大運 8순환 (10년×8 = 80년)", desc:"年干 음양+성별 → 순행/역행. 출생시 ↔ 다음 절 JD 거리로 시작 나이 소수점 산출.", meta:"calculateDaewoon"},
+      {n:6, t:"0.5s",  title:"歲運 ±10년", desc:"연단위 합·충·형·해 + 대운과의 상호작용.", meta:"calculateSewoon"},
+      {n:7, t:"0.8s",  title:"성명학 五行 보완도 (선택)", desc:"한자 자원오행 + 발음오행. 사주 五行 ↔ 이름 五行 매핑 → 보완 점수.", meta:"engine/saju/myeong.py · ADR-027 KCI 94자", adr:["ADR-027"]},
+      {n:8, t:"0.9s",  title:"generateInterpretation 결정론 풀이", desc:"격국 분류·용신·기신 결정. LLM 미관여.", meta:"front:5850"},
+      {n:9, t:"1.0s",  title:"buildSajuPrompt — 만월 아씨 페르소나 + 결정론 데이터 주입", desc:"4주 한자 + 십성표·운성표·장간표·오행분포·대운 8순환을 LLM에 인계. ADR-014 단정 회피 규칙.", meta:"front:5950", adr:["ADR-014"], star:true},
+      {n:10,t:"1~12s", title:"POST /api/llm/chat — Gemini 2.5 Flash Lite 자연어", desc:"Bizrouter google/gemini-2.5-flash-lite. 스트리밍 text/plain 청크. 사주 데이터는 결정론, Gemini는 어조 변환만.", meta:"callFreeAI · 90% 지연 발생", star:true},
+      {n:11,t:"12s",   title:"적대적 비판 루프 (옵션)", desc:"1차 응답 → 비판 에이전트 검토 (단정·미신·인과) → 재생성. 일부 모드만.", meta:"web/server.py LLM 후처리", warn:true},
+      {n:12,t:"12.1s", title:"캐시 + Analytics 적재", desc:"prompt hash → LLM 응답 캐시. MBTI counts → /metrics (Prometheus 호환).", meta:"ADR-013", adr:["ADR-013"]},
+      {n:13,t:"12.2s", title:"위기 신호 탐지 + 법적 면책 부착", desc:'"죽고싶다·자살" → 1393·1577-0199. 의료·법률·투자 자문 면책. 사주→MBTI 단정 회피.', meta:"crisis_alert + legal_notice · ADR-006·014", adr:["ADR-006","ADR-014"], warn:true},
+      {n:14,t:"12s",   title:"렌더링 — 4주 카드 + 십성·운성표 + 오행 차트 + 대운 타임라인", desc:"만월 아씨 사극 본문 + 격국·용신 + 8 대운 80년 + 세운 ±10년 + 성명 보완도.", meta:"renderSajuResult · step-result", ok:true},
+    ],
+    foot: "관상(서버 100%) vs 사주(클라이언트 80%) — 결정론이 본질, LLM은 어조 변환"
+  },
+  mbti: {
+    title: "MBTI 프로필러 파이프라인",
+    hint: "/api/profile/{type} · Jung·Myers·Keirsey·Socionics 4학파 통합",
+    tagClass: "mbti",
+    steps: [
+      {n:1, t:"0s",    title:"사용자 입력 MBTI 4자 (INTJ·ENFP 등)", desc:"또는 사주에서 자동 추정 (ADR-014 사주-MBTI 예외).", meta:"16 유형"},
+      {n:2, t:"0.05s", title:"프로필 룩업", desc:"Jung 8 인지기능 (Ni·Ne·Si·Se·Ti·Te·Fi·Fe) + Keirsey 4기질 + Socionics 16유형 매핑.", meta:"engine/mbti/profiles · ADR-024", adr:["ADR-024"], star:true},
+      {n:3, t:"0.1s",  title:"trait map 산출", desc:"우세 인지기능 4종 + 약점 인지기능 + 4기질 분류 (Guardian/Artisan/Idealist/Rational).", meta:"socionics v2 16×16 매트릭스"},
+      {n:4, t:"0.15s", title:"성격 특성 dict 응답", desc:"강점 N건 + 약점 N건 + 직업 적성 카테고리 + 관계 스타일.", meta:"통계 기반, 단정 회피"},
+      {n:5, t:"0.2s",  title:"법적 면책 (인과 단정 회피)", desc:"MBTI는 통계적 경향. 단정 표현 금지. ADR-014 사주-MBTI 예외 적용.", meta:"ADR-006·014", adr:["ADR-006","ADR-014"], warn:true},
+      {n:6, t:"0.25s", title:"응답 dict 반환", desc:"trait map + 강·약점 + 면책. 사주 fusion에서 추가 데이터로 사용 가능.", ok:true},
+    ],
+    foot: "MBTI는 결정론 룩업 — 같은 4자 = 같은 응답. LLM 호출 0회."
+  },
+  dream: {
+    title: "꿈 해석 파이프라인 (HvDC + Hobson + 14 핵심 에이전트)",
+    hint: "/api/dream/interpret_v2 · 멀티에이전트 14 핵심 + 6 보조",
+    tagClass: "dream",
+    steps: [
+      {n:1, t:"0s",    title:"꿈 텍스트 입력", desc:"사용자 자유 서술 (예: '하늘을 날아다니는 꿈을 꿨다').", meta:"max 2000자"},
+      {n:2, t:"0.1s",  title:"HvDC 코딩 (Hall + Van de Castle)", desc:"등장인물·상호작용·감정·환경·물체 5축 분류. DreamBank 22,000건 정규화 기반.", meta:"dream_lex/hvdc"},
+      {n:3, t:"0.3s",  title:"Hobson 신경생리 분류", desc:"AIM 모델 (Activation·Input·Modulation). REM 단계 특성 매칭.", meta:"dream_lex/hobson"},
+      {n:4, t:"0.5s",  title:"학파 lexicon 4분 매핑 (HvDC·Hobson·Freud v2·DreamNet v4)", desc:"Freud 정신분석 v2 (ADR-023) + DreamNet 그래프 v4 (ADR-021). 30+ dream_lex 학파 모듈.", meta:"ADR-021·023", adr:["ADR-021","ADR-023"]},
+      {n:5, t:"1s",    title:"A1~A14 핵심 에이전트 병렬 분석", desc:"A1 Hall·A2 Freud·A3 Jung·A8 Freud v2·A12 사회학·…·B6 DreamNet v4. asyncio.gather 병렬.", meta:"engine/agents/ · 14 핵심", star:true},
+      {n:6, t:"3s",    title:"6 보조 에이전트 (감정·언어·상징·신경·임상·문화)", desc:"DreamBank 통계 + 한국어 꿈 norms (HvDC korean v2). 임상 PSQI·ISI 연동.", meta:"engine/agents/ · 6 보조"},
+      {n:7, t:"4s",    title:"멀티에이전트 융합 + LLM 자연어 변환", desc:"20개 에이전트 dict → buildDreamPrompt → callFreeAI Gemini.", meta:"몽이 도령 페르소나", star:true},
+      {n:8, t:"10~15s",title:"Gemini Flash Lite 자연어 풀이", desc:"한국 사극 도사 어조 + 학파별 인용 + 단정 회피 + 임상 권고.", meta:"/api/llm/chat", star:true},
+      {n:9, t:"15s",   title:"위기 신호 + 면책 + 임상 권고 라우팅", desc:"악몽·외상 키워드 탐지 → PSQI 권유 + 1393. 임상 의심 시 ISI/STAI-K 진입.", meta:"ADR-006 + 임상 스크리닝", warn:true},
+      {n:10,t:"15s",   title:"렌더링 — 몽이 도령 본문 + DreamNet 그래프 시각화", desc:"꿈 상징 노드 + 학파별 해석 카드 + 임상 권고 + 일기 저장.", ok:true},
+    ],
+    foot: "본 시스템에서 가장 복잡한 도메인 — 20 에이전트 + 4 학파 + 임상 측정 통합"
+  },
+  divination: {
+    title: "점복 파이프라인 (타로 · 주역 · 화패)",
+    hint: "/api/tarot · /iching · /hwapae · 결정론 난수 + 카드 의미 매핑",
+    tagClass: "divination",
+    steps: [
+      {n:1, t:"0s",    title:"사용자 입력 (카드 종류·스프레드·질문)", desc:"타로 22 메이저·56 마이너 / 주역 64괘 / 화투 48패.", meta:"카드 풀 선택"},
+      {n:2, t:"0.1s",  title:"seed 결정 (사용자 + timestamp + UUID)", desc:"결정론 시드 → 같은 seed = 같은 카드 (재현 가능).", meta:"hashlib.sha256"},
+      {n:3, t:"0.2s",  title:"카드 추출 (Fisher-Yates 셔플)", desc:"스프레드 위치별 카드 + 정·역방향. 타로 켈틱 10장 / 주역 6효 / 화패 6패.", meta:"engine/divination/hwapae 364줄"},
+      {n:4, t:"0.3s",  title:"카드 의미 매핑 (학파 통설 dict)", desc:"타로 RWS·Thoth / 주역 점사·괘사·효사 / 화투 6핵심 패 (ADR-025 한국 화투).", meta:"ADR-025", adr:["ADR-025"], star:true},
+      {n:5, t:"0.4s",  title:"위치 가중치 + 카드 상호작용", desc:"켈틱 10위치별 의미 (현재·도전·과거·미래·…) / 주역 변효·호괘.", meta:"결정론 룩업"},
+      {n:6, t:"0.5s",  title:"buildDivinationPrompt — 화선 낭자 페르소나", desc:"카드 + 위치 + 의미 + 질문 컨텍스트 → Gemini 자연어 변환 입력.", meta:"front prompt builder"},
+      {n:7, t:"1~10s", title:"Gemini 자연어 풀이", desc:"화선 낭자 한국 무가 어조. 카드 결정론 데이터 인용, 운명 단정 회피.", meta:"/api/llm/chat", star:true},
+      {n:8, t:"10s",   title:"렌더링 — 카드 그림 + 위치 + 의미 + 본문", desc:"화선 낭자 사극 본문 + 카드 SVG/이미지 + 면책.", ok:true},
+    ],
+    foot: "타로·주역·화패는 결정론 분류 + LLM 자연어. 운명 단정 회피 ADR-006."
+  },
+  clinical: {
+    title: "임상 스크리닝 파이프라인",
+    hint: "/api/clinical/screening · PHQ-9·GAD-7·ISI·PSQI·BDI-K·CES-D·STAI-K·IRT",
+    tagClass: "clinical",
+    steps: [
+      {n:1, t:"0s",    title:"사용자 선택 척도", desc:"우울 (PHQ-9·BDI-K·CES-D) / 불안 (GAD-7·STAI-K) / 수면 (ISI·PSQI) / IRT (꿈 외상).", meta:"engine/clinical 8건"},
+      {n:2, t:"0~5분", title:"문항 응답 수집 (대화형)", desc:"PHQ-9 9문항 4점 · GAD-7 7문항 · ISI 7문항 · 각 척도 표준 점수 산출.", meta:"front 대화형 UI"},
+      {n:3, t:"5분",   title:"표준 점수 계산", desc:"PHQ-9 0~27 (5/10/15/20 cutoff). GAD-7 0~21. ISI 0~28.", meta:"결정론 룩업", star:true},
+      {n:4, t:"5분",   title:"중증도 분류 + 권고 메시지", desc:"경도·중등도·중증·심각. cutoff별 권고: 자가관리·상담·치료·응급.", meta:"학술 가이드라인", warn:true},
+      {n:5, t:"5분",   title:"위기 신호 탐지 (강도 의심)", desc:"PHQ-9 9번 문항 (자해) 양성 → 1393·1577-0199 + 119 자동 부착.", meta:"crisis_alert", warn:true},
+      {n:6, t:"5분",   title:"트렌드 저장 + 그래프", desc:"diary/clinical_log 적재 → /api/clinical/trend 시계열.", meta:"engine/storage"},
+      {n:7, t:"5분",   title:"렌더링 — 점수 + 카테고리 + 권고 + 트렌드", desc:"본 시스템 유일한 의학 척도 도메인. 진단 X, 자기 점검 도구.", ok:true},
+    ],
+    foot: "임상 척도는 LLM 0회 호출 — 100% 결정론. ADR-006 자문 거절 정신 유지."
+  }
+};
+
+function renderPipelineModal(key){
+  const data = PIPELINES[key];
+  if(!data) return;
+  const bg = document.getElementById("pipe-modal-bg");
+  const body = document.getElementById("pipe-modal-body");
+
+  // 색상 매핑 (도메인 톤)
+  const tone = {
+    saju:       {main:"#6dc375", glow:"rgba(109,195,117,0.12)"},
+    mbti:       {main:"#ff7d6b", glow:"rgba(255,125,107,0.12)"},
+    dream:      {main:"#6fb8ff", glow:"rgba(111,184,255,0.12)"},
+    divination: {main:"#d4a857", glow:"rgba(212,168,87,0.12)"},
+    clinical:   {main:"#d0d0d0", glow:"rgba(208,208,208,0.10)"},
+  }[key] || {main:"#f4d35e", glow:"rgba(244,211,94,0.12)"};
+
+  // 단계 박스 높이 계산 (descr 길이 따라 가변)
+  const STEP_BASE_H = 90;
+  const STEP_GAP = 32;     // 박스 사이 간격 확대 (24→32) 화살표 가시성↑
+  const X_PAD = 60;        // 좌 시간축 X
+  const NUM_X = 130;       // 번호 원 X (시간축에서 70px 떨어진 곳, 박스 좌측 stroke 안 침범 X)
+  const BOX_X = 180;       // 박스 시작 (번호 원에서 50px 떨어짐 — 깨끗 분리)
+  const BOX_W = 860;       // 단계 박스 너비
+  const VIEW_W = BOX_X + BOX_W + 80; // ADR 우측 표시 공간 포함
+  let cursorY = 30;
+
+  // 단계 렌더 (SVG group 배열)
+  const stepGroups = data.steps.map((s) => {
+    // 단계별 높이 = base + (desc 줄 추가 따라 보정 단순)
+    const adrCount = (s.adr || []).length;
+    const hasMeta = !!s.meta;
+    const lines = Math.ceil((s.desc || "").length / 75);
+    const h = STEP_BASE_H + Math.max(0, (lines - 1) * 18) + (hasMeta ? 18 : 0) + (adrCount ? 18 : 0);
+
+    const isStar = s.star;
+    const isWarn = s.warn;
+    const isOk = s.ok;
+    const boxStroke = isStar ? "var(--gold-bri)" : isWarn ? "#ff7a7a" : isOk ? "#8de28d" : tone.main;
+    const boxFill = isStar ? "rgba(244,211,94,0.10)" : isWarn ? "rgba(255,122,122,0.06)" : isOk ? "rgba(141,226,141,0.08)" : tone.glow;
+    const dashAttr = isWarn ? ' stroke-dasharray="6,4"' : "";
+    const numFill = isStar ? "var(--gold-bri)" : isWarn ? "#ff7a7a" : isOk ? "#8de28d" : tone.main;
+
+    const titleFill = isStar ? "var(--gold-bri)" : isWarn ? "#ff7a7a" : isOk ? "#8de28d" : tone.main;
+
+    let metaTxt = hasMeta ? `<text x="20" y="${78 + lines * 18}" font-size="11" fill="#5f5638" font-family="JetBrains Mono,monospace">${escSvg(s.meta)}</text>` : "";
+
+    let adrChips = "";
+    if(adrCount){
+      let xOff = 20;
+      adrChips = `<g transform="translate(0, ${94 + lines * 18 + (hasMeta?18:0)})">` +
+        (s.adr.map(a => {
+          const w = a.length * 7 + 14;
+          const chip = `<g transform="translate(${xOff}, 0)">
+            <rect width="${w}" height="16" rx="8" fill="rgba(212,175,55,0.10)" stroke="rgba(212,175,55,0.25)"/>
+            <text x="${w/2}" y="12" font-size="9" fill="#d4af37" font-family="JetBrains Mono,monospace" text-anchor="middle">${a}</text>
+          </g>`;
+          xOff += w + 6;
+          return chip;
+        }).join("")) + "</g>";
+    }
+
+    // 본 단계 박스 (번호 원 분리 — 박스 외부 절대 좌표 사용)
+    const desc = wrapSvgText(s.desc || "", 75, 20, 75, 18, "12", "#9b8c63");
+    const grp = `
+      <g transform="translate(${BOX_X}, ${cursorY})">
+        <!-- 박스 -->
+        <rect width="${BOX_W}" height="${h}" rx="10" fill="${boxFill}" stroke="${boxStroke}" stroke-width="${isStar?3:2}"${dashAttr}/>
+        <!-- 제목 -->
+        <text x="20" y="32" font-size="15" font-weight="600" fill="${titleFill}">${escSvg(s.title)}</text>
+        <!-- 시간 -->
+        <text x="20" y="54" font-size="11" font-family="JetBrains Mono,monospace" fill="#9b8c63">t = ${escSvg(s.t)}</text>
+        <!-- 설명 -->
+        ${desc}
+        ${metaTxt}
+        ${adrChips}
+      </g>
+      <!-- 번호 원 (박스 외부 절대 좌표 — 박스 stroke와 침범 X) -->
+      <g transform="translate(${NUM_X}, ${cursorY + h/2})">
+        <circle r="20" fill="${numFill}" stroke="#d4af37" stroke-width="2"/>
+        <text y="5" text-anchor="middle" font-size="14" font-weight="700" fill="#080d1c">${s.n}</text>
+      </g>
+    `;
+
+    // 시간축 마커 (라벨만 — 가로선 제거해 박스와 시각적 분리)
+    const timeMarker = `
+      <circle cx="${X_PAD}" cy="${cursorY + h/2}" r="3" fill="${isStar||isOk?"var(--gold-bri)":isWarn?"#ff7a7a":tone.main}"/>
+      <text x="${X_PAD - 12}" y="${cursorY + h/2 + 4}" text-anchor="end" font-size="10" fill="${isStar||isOk?"var(--gold-bri)":isWarn?"#ff7a7a":"#6e5a26"}" font-family="JetBrains Mono,monospace">${escSvg(s.t)}</text>
+    `;
+
+    // 박스 사이 연결선 (삼각형 marker 제거 — 단순 세로선만)
+    const isLast = s === data.steps[data.steps.length - 1];
+    const arrowY1 = cursorY + h + 2;
+    const arrowY2 = cursorY + h + STEP_GAP - 2;
+    const arrow = isLast ? "" : `
+      <line x1="${BOX_X + BOX_W/2}" y1="${arrowY1}" x2="${BOX_X + BOX_W/2}" y2="${arrowY2}" stroke="${tone.main}" stroke-width="2" opacity="0.5"/>
+    `;
+
+    cursorY += h + STEP_GAP;
+    return timeMarker + grp + arrow;
+  }).join("");
+
+  const totalH = cursorY + 20;
+
+  // viewBox 안전 여백: 좌 0 (X_PAD=60 + 시간 라벨 끝~30) — 좌측 잘림 없음
+  const VIEW_X_MIN = 0;
+  const VIEW_W_FULL = VIEW_W;
+
+  const svg = `
+    <svg viewBox="${VIEW_X_MIN} 0 ${VIEW_W_FULL} ${totalH}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;font-family:'Noto Serif KR',serif">
+      <defs>
+        <marker id="arr-modal" viewBox="0 0 10 10" refX="5" refY="9" markerWidth="8" markerHeight="8" orient="auto">
+          <path d="M0 0 L10 0 L5 10 z" fill="${tone.main}"/>
+        </marker>
+      </defs>
+      <!-- 좌측 시간축 -->
+      <line x1="${X_PAD}" y1="20" x2="${X_PAD}" y2="${totalH - 20}" stroke="${tone.main}" stroke-width="2" opacity="0.4"/>
+      <text x="${X_PAD}" y="14" text-anchor="middle" font-size="10" fill="#9b8c63" font-family="JetBrains Mono,monospace">t = 0</text>
+      ${stepGroups}
+    </svg>
+  `;
+
+  body.innerHTML = `
+    <button class="pipe-modal-close" id="pipe-modal-close" aria-label="close">×</button>
+    <div class="pipe-modal-head">
+      <span class="pipe-modal-tag ${data.tagClass}">${key.toUpperCase()}</span>
+      <h3>${data.title}</h3>
+      <span class="pipe-modal-hint">${data.hint}</span>
+    </div>
+    <div class="pipe-svg-wrap">${svg}</div>
+    <div class="pipe-modal-foot">${data.foot}</div>
+  `;
+  bg.classList.add("open");
+  document.body.style.overflow = "hidden";
+
+  document.getElementById("pipe-modal-close").addEventListener("click", closePipelineModal);
+}
+
+// SVG text 줄바꿈 (단순 글자수 기준)
+function wrapSvgText(text, maxChars, x, startY, lineH, fontSize, fill){
+  if(!text) return "";
+  const words = text.split(" ");
+  const lines = [];
+  let cur = "";
+  for(const w of words){
+    const tryStr = cur ? cur + " " + w : w;
+    if(tryStr.length > maxChars){
+      if(cur) lines.push(cur);
+      cur = w;
+    } else {
+      cur = tryStr;
+    }
+  }
+  if(cur) lines.push(cur);
+  return lines.map((line, i) =>
+    `<text x="${x}" y="${startY + i * lineH}" font-size="${fontSize}" fill="${fill}">${escSvg(line)}</text>`
+  ).join("");
+}
+
+// SVG attr escape
+function escSvg(s){
+  return String(s == null ? "" : s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function closePipelineModal(){
+  document.getElementById("pipe-modal-bg").classList.remove("open");
+  document.body.style.overflow = "";
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".pipe-node").forEach(node => {
+    node.addEventListener("click", () => {
+      const key = node.getAttribute("data-pipeline");
+      renderPipelineModal(key);
+    });
+  });
+  // ESC + 배경 클릭으로 닫기
+  document.addEventListener("keydown", (e) => {
+    if(e.key === "Escape") closePipelineModal();
+  });
+  document.getElementById("pipe-modal-bg").addEventListener("click", (e) => {
+    if(e.target.id === "pipe-modal-bg") closePipelineModal();
+  });
+});
+</script>
+
+<!-- 파이프라인 세부 모달 -->
+<div class="pipe-modal-bg" id="pipe-modal-bg" role="dialog" aria-modal="true">
+  <div class="pipe-modal" style="position:relative">
+    <div id="pipe-modal-body"></div>
+  </div>
+</div>
+</body>
+</html>

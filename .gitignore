@@ -1,0 +1,10 @@
+# Playwright 자동화 산출물 (호스팅에 불필요)
+pw_work/
+__pycache__/
+*.pyc
+
+# 시스템
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
