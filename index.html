@@ -311,6 +311,11 @@
   .pipe-modal-tag.dream{background:rgba(111,184,255,.12);color:#6fb8ff;border:1px solid #6fb8ff}
   .pipe-modal-tag.divination{background:rgba(212,168,87,.12);color:#d4a857;border:1px solid #d4a857}
   .pipe-modal-tag.clinical{background:rgba(208,208,208,.10);color:#d0d0d0;border:1px solid #d0d0d0}
+  .pipe-modal-tag.face{background:rgba(255,158,181,.12);color:#ff9eb5;border:1px solid #ff9eb5}
+  .pipe-modal-tag.palm{background:rgba(252,211,77,.12);color:#fcd34d;border:1px solid #fcd34d}
+  .pipe-modal-tag.name{background:rgba(167,139,250,.12);color:#a78bfa;border:1px solid #a78bfa}
+  .pipe-modal-tag.star{background:rgba(196,181,253,.14);color:#c4b5fd;border:1px solid #c4b5fd}
+  .pipe-modal-tag.hwapae{background:rgba(251,113,133,.12);color:#fb7185;border:1px solid #fb7185}
   .pipe-modal h3{margin:0;font-size:24px;color:var(--gold-bri);letter-spacing:2px;font-weight:800}
   .pipe-modal-hint{margin-left:auto;color:var(--text-mute);font-size:12px;font-family:'JetBrains Mono',monospace}
   .pipe-modal-close{
@@ -401,7 +406,7 @@
       <div class="hint">사용자 입력 → 도메인 엔진 병렬화 → LLM 융합 → 안전성 검증 → 응답</div>
     </div>
     <div class="arch">
-      <svg viewBox="0 0 1380 460" xmlns="http://www.w3.org/2000/svg" aria-label="orchestration diagram">
+      <svg viewBox="0 0 1380 620" xmlns="http://www.w3.org/2000/svg" aria-label="orchestration diagram">
         <defs>
           <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
             <path d="M0 0 L10 5 L0 10 z" fill="#6e5a26"/>
@@ -426,8 +431,8 @@
 
         <!-- DETERMINISTIC EMPHASIS BANNER -->
         <g>
-          <rect x="316" y="42" width="208" height="14" rx="7" fill="#13251a" stroke="#6dc375"/>
-          <text x="420" y="53" font-size="9" fill="#6dc375" font-family="JetBrains Mono,monospace" text-anchor="middle" letter-spacing="2">DETERMINISTIC · NO LLM</text>
+          <rect x="316" y="42" width="268" height="14" rx="7" fill="#13251a" stroke="#6dc375"/>
+          <text x="450" y="53" font-size="9" fill="#6dc375" font-family="JetBrains Mono,monospace" text-anchor="middle" letter-spacing="2">7인 점술가 — DETERMINISTIC + DOMAIN LLM</text>
           <rect x="664" y="42" width="280" height="14" rx="7" fill="#2b2415" stroke="#f4d35e"/>
           <text x="804" y="53" font-size="9" fill="#f4d35e" font-family="JetBrains Mono,monospace" text-anchor="middle" letter-spacing="1">CONTEXT-INJECTED · NOT PRETRAINED</text>
         </g>
@@ -451,145 +456,191 @@
           <text x="60" y="340" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">cards · spread · seed</text>
         </g>
 
-        <!-- COLUMN 2 : DOMAIN ENGINES (clickable) -->
+        <!-- COLUMN 2 : DOMAIN ENGINES (7인 점술가 + MBTI + 임상, clickable) -->
         <g>
-          <!-- saju -->
+          <!-- 만월 아씨 — 사주 -->
           <g class="pipe-node" data-pipeline="saju" style="cursor:pointer">
-            <rect x="320" y="55"  width="260" height="60" rx="10" fill="#13251a" stroke="#6dc375"/>
-            <text x="340" y="78"  font-size="13" fill="#6dc375" font-weight="700">사주 엔진</text>
-            <text x="340" y="96"  font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">/api/saju</text>
-            <text x="340" y="110" font-size="10" fill="#5f5638" font-family="JetBrains Mono,monospace">day_master · ten_gods · luck</text>
+            <rect x="320" y="55" width="260" height="56" rx="10" fill="#13251a" stroke="#6dc375"/>
+            <text x="340" y="76" font-size="13" fill="#6dc375" font-weight="700">만월 아씨 · 사주 엔진</text>
+            <text x="340" y="93" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">/api/saju · /api/llm/chat</text>
+            <text x="340" y="106" font-size="10" fill="#5f5638" font-family="JetBrains Mono,monospace">60갑자 · 십성 · 운성 · 대운</text>
             <text x="565" y="73" font-size="14" fill="#6dc375" text-anchor="end" font-family="JetBrains Mono,monospace">⊕</text>
           </g>
 
-          <!-- mbti / type profile -->
-          <g class="pipe-node" data-pipeline="mbti" style="cursor:pointer">
-            <rect x="320" y="135" width="260" height="60" rx="10" fill="#241319" stroke="#ff7d6b"/>
-            <text x="340" y="158" font-size="13" fill="#ff7d6b" font-weight="700">MBTI 프로필러</text>
-            <text x="340" y="176" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">/api/profile/{type}</text>
-            <text x="340" y="190" font-size="10" fill="#5f5638" font-family="JetBrains Mono,monospace">Ni/Te/Fi/Se · trait map</text>
-            <text x="565" y="153" font-size="14" fill="#ff7d6b" text-anchor="end" font-family="JetBrains Mono,monospace">⊕</text>
+          <!-- 운학 도사 — 관상 -->
+          <g class="pipe-node" data-pipeline="face" style="cursor:pointer">
+            <rect x="320" y="121" width="260" height="56" rx="10" fill="#2a1822" stroke="#ff9eb5"/>
+            <text x="340" y="142" font-size="13" fill="#ff9eb5" font-weight="700">운학 도사 · 관상</text>
+            <text x="340" y="159" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">/api/face/reading</text>
+            <text x="340" y="172" font-size="10" fill="#5f5638" font-family="JetBrains Mono,monospace">Opus Vision + Gemini 사극 (Stage 1·2)</text>
+            <text x="565" y="139" font-size="14" fill="#ff9eb5" text-anchor="end" font-family="JetBrains Mono,monospace">⊕</text>
           </g>
 
-          <!-- dream parser -->
+          <!-- 옥선 할미 — 손금 -->
+          <g class="pipe-node" data-pipeline="palm" style="cursor:pointer">
+            <rect x="320" y="187" width="260" height="56" rx="10" fill="#2b2615" stroke="#fcd34d"/>
+            <text x="340" y="208" font-size="13" fill="#fcd34d" font-weight="700">옥선 할미 · 손금</text>
+            <text x="340" y="225" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">/api/palm/reading</text>
+            <text x="340" y="238" font-size="10" fill="#5f5638" font-family="JetBrains Mono,monospace">4대선 + 금성대 결정론 점수</text>
+            <text x="565" y="205" font-size="14" fill="#fcd34d" text-anchor="end" font-family="JetBrains Mono,monospace">⊕</text>
+          </g>
+
+          <!-- 묵향 선생 — 이름 -->
+          <g class="pipe-node" data-pipeline="name" style="cursor:pointer">
+            <rect x="320" y="253" width="260" height="56" rx="10" fill="#1f1a32" stroke="#a78bfa"/>
+            <text x="340" y="274" font-size="13" fill="#a78bfa" font-weight="700">묵향 선생 · 이름</text>
+            <text x="340" y="291" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">/api/name/reading</text>
+            <text x="340" y="304" font-size="10" fill="#5f5638" font-family="JetBrains Mono,monospace">대법원 9389 한자 + 음운·자원오행</text>
+            <text x="565" y="271" font-size="14" fill="#a78bfa" text-anchor="end" font-family="JetBrains Mono,monospace">⊕</text>
+          </g>
+
+          <!-- 몽이 도령 — 꿈 -->
           <g class="pipe-node" data-pipeline="dream" style="cursor:pointer">
-            <rect x="320" y="215" width="260" height="60" rx="10" fill="#1c2333" stroke="#6fb8ff"/>
-            <text x="340" y="238" font-size="13" fill="#6fb8ff" font-weight="700">꿈 해석 (HvDC + Hobson)</text>
-            <text x="340" y="256" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">/api/dream/interpret_v2</text>
-            <text x="340" y="270" font-size="10" fill="#5f5638" font-family="JetBrains Mono,monospace">아르테미도로스 + DreamBank</text>
-            <text x="565" y="233" font-size="14" fill="#6fb8ff" text-anchor="end" font-family="JetBrains Mono,monospace">⊕</text>
+            <rect x="320" y="319" width="260" height="56" rx="10" fill="#1c2333" stroke="#6fb8ff"/>
+            <text x="340" y="340" font-size="13" fill="#6fb8ff" font-weight="700">몽이 도령 · 꿈 해석</text>
+            <text x="340" y="357" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">/api/dream/interpret_v2</text>
+            <text x="340" y="370" font-size="10" fill="#5f5638" font-family="JetBrains Mono,monospace">HvDC + Hobson + 14 핵심 + 6 보조</text>
+            <text x="565" y="337" font-size="14" fill="#6fb8ff" text-anchor="end" font-family="JetBrains Mono,monospace">⊕</text>
           </g>
 
-          <!-- divination -->
+          <!-- 화선 낭자 — 화패·타로·주역 -->
           <g class="pipe-node" data-pipeline="divination" style="cursor:pointer">
-            <rect x="320" y="295" width="260" height="60" rx="10" fill="#2b2415" stroke="#d4a857"/>
-            <text x="340" y="318" font-size="13" fill="#d4a857" font-weight="700">점복 (타로·주역·화패)</text>
-            <text x="340" y="336" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">/api/tarot · /iching · /hwapae</text>
-            <text x="340" y="350" font-size="10" fill="#5f5638" font-family="JetBrains Mono,monospace">난수 + 카드 의미 매핑</text>
-            <text x="565" y="313" font-size="14" fill="#d4a857" text-anchor="end" font-family="JetBrains Mono,monospace">⊕</text>
+            <rect x="320" y="385" width="260" height="56" rx="10" fill="#2b2415" stroke="#d4a857"/>
+            <text x="340" y="406" font-size="13" fill="#d4a857" font-weight="700">화선 낭자 · 점복</text>
+            <text x="340" y="423" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">/api/hwapae · /tarot · /iching</text>
+            <text x="340" y="436" font-size="10" fill="#5f5638" font-family="JetBrains Mono,monospace">화패 48패 + 타로 78 + 주역 64괘</text>
+            <text x="565" y="403" font-size="14" fill="#d4a857" text-anchor="end" font-family="JetBrains Mono,monospace">⊕</text>
           </g>
 
-          <!-- clinical -->
+          <!-- 성하 공자 — 별빛 -->
+          <g class="pipe-node" data-pipeline="star" style="cursor:pointer">
+            <rect x="320" y="451" width="260" height="56" rx="10" fill="#211f3a" stroke="#c4b5fd"/>
+            <text x="340" y="472" font-size="13" fill="#c4b5fd" font-weight="700">성하 공자 · 별빛 풀이</text>
+            <text x="340" y="489" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">/api/star/reading</text>
+            <text x="340" y="502" font-size="10" fill="#5f5638" font-family="JetBrains Mono,monospace">서양 점성술 + 행성·궁·각도</text>
+            <text x="565" y="469" font-size="14" fill="#c4b5fd" text-anchor="end" font-family="JetBrains Mono,monospace">⊕</text>
+          </g>
+
+          <!-- MBTI -->
+          <g class="pipe-node" data-pipeline="mbti" style="cursor:pointer">
+            <rect x="320" y="517" width="260" height="40" rx="10" fill="#241319" stroke="#ff7d6b"/>
+            <text x="340" y="535" font-size="12" fill="#ff7d6b" font-weight="700">MBTI 프로필러 (보조)</text>
+            <text x="340" y="551" font-size="10" fill="#5f5638" font-family="JetBrains Mono,monospace">/api/profile · Ni/Te/Fi/Se</text>
+            <text x="565" y="533" font-size="14" fill="#ff7d6b" text-anchor="end" font-family="JetBrains Mono,monospace">⊕</text>
+          </g>
+
+          <!-- 임상 -->
           <g class="pipe-node" data-pipeline="clinical" style="cursor:pointer">
-            <rect x="320" y="375" width="260" height="60" rx="10" fill="#1f2731" stroke="#d0d0d0"/>
-            <text x="340" y="398" font-size="13" fill="#d0d0d0" font-weight="700">임상 스크리닝</text>
-            <text x="340" y="416" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">/api/clinical/screening</text>
-            <text x="340" y="430" font-size="10" fill="#5f5638" font-family="JetBrains Mono,monospace">PHQ-9 · GAD-7 · ISI</text>
-            <text x="565" y="393" font-size="14" fill="#d0d0d0" text-anchor="end" font-family="JetBrains Mono,monospace">⊕</text>
+            <rect x="320" y="565" width="260" height="40" rx="10" fill="#1f2731" stroke="#d0d0d0"/>
+            <text x="340" y="583" font-size="12" fill="#d0d0d0" font-weight="700">임상 스크리닝 (안전망)</text>
+            <text x="340" y="599" font-size="10" fill="#5f5638" font-family="JetBrains Mono,monospace">/api/clinical · PHQ-9 · GAD-7 · ISI</text>
+            <text x="565" y="581" font-size="14" fill="#d0d0d0" text-anchor="end" font-family="JetBrains Mono,monospace">⊕</text>
           </g>
         </g>
 
         <!-- COLUMN 3 : LLM FUSION -->
         <g>
-          <rect x="680" y="120" width="240" height="220" rx="16" fill="url(#goldgrad)" opacity=".1"/>
-          <rect x="680" y="120" width="240" height="220" rx="16" fill="none" stroke="#f4d35e" stroke-width="2"/>
-          <text x="700" y="148" font-size="14" fill="#f4d35e" font-weight="800" letter-spacing="2">LLM FUSION CORE</text>
-          <text x="700" y="170" font-size="11" fill="#d4af37" font-family="JetBrains Mono,monospace">/api/saju/fusion</text>
-          <text x="700" y="186" font-size="11" fill="#d4af37" font-family="JetBrains Mono,monospace">/api/saju/ask</text>
-          <text x="700" y="202" font-size="11" fill="#d4af37" font-family="JetBrains Mono,monospace">/api/llm/chat</text>
+          <rect x="680" y="230" width="240" height="220" rx="16" fill="url(#goldgrad)" opacity=".1"/>
+          <rect x="680" y="230" width="240" height="220" rx="16" fill="none" stroke="#f4d35e" stroke-width="2"/>
+          <text x="700" y="258" font-size="14" fill="#f4d35e" font-weight="800" letter-spacing="2">LLM FUSION CORE</text>
+          <text x="700" y="280" font-size="11" fill="#d4af37" font-family="JetBrains Mono,monospace">/api/saju/fusion</text>
+          <text x="700" y="296" font-size="11" fill="#d4af37" font-family="JetBrains Mono,monospace">/api/saju/ask</text>
+          <text x="700" y="312" font-size="11" fill="#d4af37" font-family="JetBrains Mono,monospace">/api/llm/chat</text>
 
-          <line x1="700" y1="220" x2="900" y2="220" stroke="#6e5a26" stroke-dasharray="3 3"/>
+          <line x1="700" y1="328" x2="900" y2="328" stroke="#6e5a26" stroke-dasharray="3 3"/>
 
-          <text x="700" y="244" font-size="12" fill="#f4d35e" font-weight="700">▸ MiniMax (chat)</text>
-          <text x="700" y="262" font-size="12" fill="#f4d35e" font-weight="700">▸ BizRouter (fallback)</text>
-          <text x="700" y="282" font-size="11" fill="#d4af37" font-family="JetBrains Mono,monospace">prompt + 도메인 컨텍스트 주입</text>
-          <text x="700" y="300" font-size="11" fill="#d4af37" font-family="JetBrains Mono,monospace">system + history (≤10)</text>
-          <text x="700" y="320" font-size="11" fill="#d4af37" font-family="JetBrains Mono,monospace">temperature · max_tokens</text>
+          <text x="700" y="350" font-size="12" fill="#f4d35e" font-weight="700">▸ MiniMax (chat)</text>
+          <text x="700" y="368" font-size="12" fill="#f4d35e" font-weight="700">▸ BizRouter (fallback)</text>
+          <text x="700" y="388" font-size="11" fill="#d4af37" font-family="JetBrains Mono,monospace">prompt + 도메인 컨텍스트 주입</text>
+          <text x="700" y="406" font-size="11" fill="#d4af37" font-family="JetBrains Mono,monospace">system + history (≤10)</text>
+          <text x="700" y="424" font-size="11" fill="#d4af37" font-family="JetBrains Mono,monospace">temperature · max_tokens</text>
         </g>
 
         <!-- COLUMN 4 : SAFETY -->
         <g>
-          <rect x="960" y="55"  width="240" height="60" rx="10" fill="#231319" stroke="#ff7a7a"/>
-          <text x="980" y="80"  font-size="13" fill="#ff7a7a" font-weight="700">위기 탐지</text>
-          <text x="980" y="100" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">crisis_alert · cathartic</text>
+          <rect x="960" y="170" width="240" height="56" rx="10" fill="#231319" stroke="#ff7a7a"/>
+          <text x="980" y="194" font-size="13" fill="#ff7a7a" font-weight="700">위기 탐지</text>
+          <text x="980" y="212" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">crisis_alert · cathartic</text>
 
-          <rect x="960" y="135" width="240" height="60" rx="10" fill="#1f2731" stroke="#d0d0d0"/>
-          <text x="980" y="160" font-size="13" fill="#d0d0d0" font-weight="700">법적 고지 삽입</text>
-          <text x="980" y="180" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">legal_notice (의료/법률/투자)</text>
+          <rect x="960" y="240" width="240" height="56" rx="10" fill="#1f2731" stroke="#d0d0d0"/>
+          <text x="980" y="264" font-size="13" fill="#d0d0d0" font-weight="700">법적 고지 삽입</text>
+          <text x="980" y="282" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">legal_notice (의료/법률/투자)</text>
 
-          <rect x="960" y="215" width="240" height="60" rx="10" fill="#2b2415" stroke="#d4a857"/>
-          <text x="980" y="240" font-size="13" fill="#d4a857" font-weight="700">레이트 리밋 · 캐시</text>
-          <text x="980" y="260" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">60 rpm · image/music cache</text>
+          <rect x="960" y="310" width="240" height="56" rx="10" fill="#2b2415" stroke="#d4a857"/>
+          <text x="980" y="334" font-size="13" fill="#d4a857" font-weight="700">레이트 리밋 · 캐시</text>
+          <text x="980" y="352" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">60 rpm · image/music cache</text>
 
-          <rect x="960" y="295" width="240" height="60" rx="10" fill="#13251a" stroke="#6dc375"/>
-          <text x="980" y="320" font-size="13" fill="#6dc375" font-weight="700">메트릭 적재</text>
-          <text x="980" y="340" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">/metrics · /api/analytics</text>
+          <rect x="960" y="380" width="240" height="56" rx="10" fill="#13251a" stroke="#6dc375"/>
+          <text x="980" y="404" font-size="13" fill="#6dc375" font-weight="700">메트릭 · LLM 모니터링</text>
+          <text x="980" y="422" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">/metrics · sample 1% (ADR-036)</text>
         </g>
 
         <!-- COLUMN 5 : OUTPUT -->
         <g>
-          <rect x="1220" y="135" width="140" height="180" rx="14" fill="#172147" stroke="#f4d35e" stroke-width="2"/>
-          <text x="1240" y="162" font-size="14" fill="#f4d35e" font-weight="800">RESPONSE</text>
-          <text x="1240" y="190" font-size="12" fill="#e8d9b0">▸ 본문 텍스트</text>
-          <text x="1240" y="210" font-size="12" fill="#e8d9b0">▸ 명식·점괘</text>
-          <text x="1240" y="230" font-size="12" fill="#e8d9b0">▸ crisis flag</text>
-          <text x="1240" y="250" font-size="12" fill="#e8d9b0">▸ legal_notice</text>
-          <text x="1240" y="270" font-size="12" fill="#e8d9b0">▸ turns_used</text>
-          <text x="1240" y="290" font-size="12" fill="#e8d9b0">▸ lang</text>
+          <rect x="1220" y="240" width="140" height="180" rx="14" fill="#172147" stroke="#f4d35e" stroke-width="2"/>
+          <text x="1240" y="266" font-size="14" fill="#f4d35e" font-weight="800">RESPONSE</text>
+          <text x="1240" y="292" font-size="12" fill="#e8d9b0">▸ 본문 텍스트</text>
+          <text x="1240" y="310" font-size="12" fill="#e8d9b0">▸ 명식·점괘·관상</text>
+          <text x="1240" y="328" font-size="12" fill="#e8d9b0">▸ crisis flag</text>
+          <text x="1240" y="346" font-size="12" fill="#e8d9b0">▸ legal_notice</text>
+          <text x="1240" y="364" font-size="12" fill="#e8d9b0">▸ 시각화 데이터</text>
+          <text x="1240" y="382" font-size="12" fill="#e8d9b0">▸ lang</text>
         </g>
 
-        <!-- EDGES : input -> engines -->
+        <!-- EDGES : input -> engines (9개) -->
         <g fill="none" stroke="#6e5a26" stroke-width="1.5" marker-end="url(#arr)">
-          <path class="edge" d="M240 85   C 280 85,280 85,320 85"/>
-          <path class="edge" d="M240 165  C 280 165,280 165,320 165"/>
-          <path class="edge" d="M240 245  C 280 245,280 245,320 245"/>
-          <path class="edge" d="M240 325  C 280 325,280 325,320 325"/>
-          <path class="edge" d="M240 325  C 280 325,280 405,320 405"/>
+          <path class="edge" d="M240 85   C 280 85, 280 85, 320 83"/>
+          <path class="edge" d="M240 165  C 280 165,280 149,320 149"/>
+          <path class="edge" d="M240 245  C 280 245,280 215,320 215"/>
+          <path class="edge" d="M240 325  C 280 325,280 281,320 281"/>
+          <path class="edge" d="M240 325  C 280 325,280 347,320 347"/>
+          <path class="edge" d="M240 325  C 280 325,280 413,320 413"/>
+          <path class="edge" d="M240 325  C 280 325,280 479,320 479"/>
+          <path class="edge" d="M240 165  C 280 165,280 537,320 537"/>
+          <path class="edge" d="M240 325  C 280 325,280 585,320 585"/>
         </g>
 
-        <!-- EDGES : engines -> fusion -->
+        <!-- EDGES : engines -> fusion (9개 → fusion box 230~450) -->
         <g fill="none" stroke="#f4d35e" stroke-width="1.7" marker-end="url(#arrgold)" opacity=".85">
-          <path class="edge" id="e-saju"     d="M580 85   C 630 85,630 200,680 200"/>
-          <path class="edge" id="e-mbti"     d="M580 165  C 630 165,630 215,680 215"/>
-          <path class="edge" id="e-dream"    d="M580 245  C 630 245,630 235,680 235"/>
-          <path class="edge" id="e-div"      d="M580 325  C 630 325,630 255,680 255"/>
-          <path class="edge" id="e-clinical" d="M580 405  C 630 405,630 280,680 280"/>
+          <path class="edge" id="e-saju"     d="M580 83  C 630 83, 630 250, 680 250"/>
+          <path class="edge" id="e-face"     d="M580 149 C 630 149, 630 275, 680 275"/>
+          <path class="edge" id="e-palm"     d="M580 215 C 630 215, 630 300, 680 300"/>
+          <path class="edge" id="e-name"     d="M580 281 C 630 281, 630 325, 680 325"/>
+          <path class="edge" id="e-dream"    d="M580 347 C 630 347, 630 350, 680 350"/>
+          <path class="edge" id="e-div"      d="M580 413 C 630 413, 630 375, 680 375"/>
+          <path class="edge" id="e-star"     d="M580 479 C 630 479, 630 400, 680 400"/>
+          <path class="edge" id="e-mbti"     d="M580 537 C 630 537, 630 425, 680 425"/>
+          <path class="edge" id="e-clinical" d="M580 585 C 630 585, 630 445, 680 445"/>
         </g>
 
-        <!-- EDGES : fusion -> safety -->
+        <!-- EDGES : fusion -> safety (4개 → safety box 170~436) -->
         <g fill="none" stroke="#f4d35e" stroke-width="1.7" marker-end="url(#arrgold)" opacity=".85">
-          <path class="edge" d="M920 200 C 940 200,940 85,960 85"/>
-          <path class="edge" d="M920 220 C 940 220,940 165,960 165"/>
-          <path class="edge" d="M920 240 C 940 240,940 245,960 245"/>
-          <path class="edge" d="M920 280 C 940 280,940 325,960 325"/>
+          <path class="edge" d="M920 280 C 940 280,940 198,960 198"/>
+          <path class="edge" d="M920 320 C 940 320,940 268,960 268"/>
+          <path class="edge" d="M920 360 C 940 360,940 338,960 338"/>
+          <path class="edge" d="M920 400 C 940 400,940 408,960 408"/>
         </g>
 
-        <!-- EDGES : safety -> output -->
+        <!-- EDGES : safety -> output (4개) -->
         <g fill="none" stroke="#6e5a26" stroke-width="1.5" marker-end="url(#arr)">
-          <path class="edge" d="M1200 85  C 1210 85,1210 200,1220 200"/>
-          <path class="edge" d="M1200 165 C 1210 165,1210 215,1220 215"/>
-          <path class="edge" d="M1200 245 C 1210 245,1210 235,1220 235"/>
-          <path class="edge" d="M1200 325 C 1210 325,1210 260,1220 260"/>
+          <path class="edge" d="M1200 198 C 1210 198,1210 290,1220 290"/>
+          <path class="edge" d="M1200 268 C 1210 268,1210 310,1220 310"/>
+          <path class="edge" d="M1200 338 C 1210 338,1210 330,1220 330"/>
+          <path class="edge" d="M1200 408 C 1210 408,1210 350,1220 350"/>
         </g>
 
       </svg>
 
       <div class="legend">
-        <span><i style="background:#6dc375"></i>사주(명리)</span>
-        <span><i style="background:#ff7d6b"></i>심리·MBTI</span>
-        <span><i style="background:#6fb8ff"></i>꿈 해석</span>
-        <span><i style="background:#d4a857"></i>점복</span>
-        <span><i style="background:#d0d0d0"></i>임상/안전</span>
+        <span><i style="background:#6dc375"></i>만월 아씨 · 사주</span>
+        <span><i style="background:#ff9eb5"></i>운학 도사 · 관상</span>
+        <span><i style="background:#fcd34d"></i>옥선 할미 · 손금</span>
+        <span><i style="background:#a78bfa"></i>묵향 선생 · 이름</span>
+        <span><i style="background:#6fb8ff"></i>몽이 도령 · 꿈</span>
+        <span><i style="background:#d4a857"></i>화선 낭자 · 점복</span>
+        <span><i style="background:#c4b5fd"></i>성하 공자 · 별빛</span>
+        <span><i style="background:#ff7d6b"></i>MBTI 보조</span>
+        <span><i style="background:#d0d0d0"></i>임상 안전망</span>
         <span><i style="background:#f4d35e"></i>LLM Fusion Path</span>
       </div>
     </div>
@@ -1319,6 +1370,77 @@ const PIPELINES = {
       {n:7, t:"5분",   title:"렌더링 — 점수 + 카테고리 + 권고 + 트렌드", desc:"본 시스템 유일한 의학 척도 도메인. 진단 X, 자기 점검 도구.", ok:true},
     ],
     foot: "임상 척도는 LLM 0회 호출 — 100% 결정론. ADR-006 자문 거절 정신 유지."
+  },
+  face: {
+    title: "운학 도사 관상 풀이 파이프라인",
+    hint: "/api/face/reading · Opus Vision JSON + Gemini 사극 (Stage 1·2)",
+    tagClass: "face",
+    steps: [
+      {n:1, t:"0s",    title:"사용자 사진 캡처 + 클라이언트 전처리", desc:"camera/file 업로드 → 5MB 초과 시 1280px JPEG 0.85 자동 축소 (ADR-035) + MediaPipe 478 키포인트 추출.", meta:"front downsampleDataUrl", adr:["ADR-035"]},
+      {n:2, t:"0.2s",  title:"HTTP POST + fetchWithRetry", desc:"5xx 1회 자동 재시도 3초 백오프. payload: image_base64 + age/gender/question + metrics.landmarks.", meta:"front fetchWithRetry"},
+      {n:3, t:"0.3s",  title:"L1 파일 무결성 + 7MB 가드", desc:"매직 넘버 PNG/JPEG/HEIC/AVIF 자동 감지 + 크기 초과 시 HTTP 413.", meta:"engine/safety/file_integrity · ADR-011", adr:["ADR-011"]},
+      {n:4, t:"0.4s",  title:"위기 신호 탐지", desc:"질문 텍스트 위기 키워드 → 1393·1577-0199 자동 부착 + 조기 반환.", meta:"crisis_alert", warn:true},
+      {n:5, t:"0.5s",  title:"결정론 엔진 점수 산출", desc:"face_scoring(12궁·삼정·오관 ADR-004) + face_shape(5형 ADR-022) + facial_feature_classifier(앙월구·복주구·일자구 ADR-034).", meta:"engine/divination 2327줄", adr:["ADR-004","ADR-022","ADR-034"]},
+      {n:6, t:"0.6s",  title:"캐시 조회 (24h TTL)", desc:"hash(image + age + gender) → HIT 시 즉시 응답 (~700ms).", meta:"_hash_payload"},
+      {n:7, t:"0.7s",  title:"Stage 1 — Opus 4.7 Vision 요청 빌드", desc:"_STAGE1_OBJECTIVE_SYSTEM — 학파 30+ 어휘 + 사상체질 금지 명시. 결정론 점수 미주입.", meta:"ADR-005 Sup 4", adr:["ADR-005"]},
+      {n:8, t:"1~15s", title:"Opus Vision JSON 출력", desc:"face_outline·forehead·eyebrow·eye·nose·mouth·chin·cheek·complexion 해부학 명칭만. 학파 용어 0건.", meta:"Bizrouter anthropic/claude-opus-4.7", star:true},
+      {n:9, t:"14s",   title:"결정론 점수 요약 (Stage 2 입력 빌드)", desc:"_build_deterministic_scores_summary — 영문 key → 한국어 라벨 변환.", meta:"Phase 19~21"},
+      {n:10,t:"15~20s",title:"Stage 2 — Gemini Flash Lite 사극 어조 변환", desc:"사진 미열람. 입력 1(해부학 JSON) + 입력 2(결정론 점수) → 운학 도사 800~1300자.", meta:"google/gemini-2.5-flash-lite", star:true},
+      {n:11,t:"20.1s", title:"운명 매핑 후처리 필터", desc:"정규식 5카테고리: 시간 차원·운명 어휘·12궁 매핑·학파 인용·사상체질 자동 제거 (3회차).", meta:"_postprocess_remove_fate_mapping", warn:true},
+      {n:12,t:"20.2s", title:"법적 면책 부착 + 응답 dict 조립", desc:"의료·법률·투자 면책 자동. anatomical_description + palace_scores + face_shape + facial_features 노출.", meta:"build_legal_footer"},
+      {n:13,t:"20.3s", title:"캐시 저장 + LLM 운영 모니터링 (1%)", desc:"step_archive/face_reading_cache + llm_output_samples/<date>.jsonl + 운명 어휘 카운터.", meta:"ADR-036 (5회차)", adr:["ADR-036"]},
+      {n:14,t:"21s",   title:"클라이언트 6종 UI 시각화", desc:"12궁 막대 + 삼정 도넛 + 오관 레이더 + 5형 배지 + 신·기 게이지 + 해부학 카드 + 운학 도사 사극 본문.", meta:"Phase 22 캐릭터화", ok:true},
+    ],
+    foot: "관상은 본 세션 11 phase 진화 (Phase 12·17~22 + ADR-034·035·036). 운명 매핑 차단 사실성 분리 절대 정합."
+  },
+  palm: {
+    title: "옥선 할미 손금 풀이 파이프라인",
+    hint: "/api/palm/reading · 4대선 + 금성대 결정론 + Gemini 자연어",
+    tagClass: "palm",
+    steps: [
+      {n:1, t:"0s",    title:"사용자 손바닥 사진 + 손(좌/우) + 컨텍스트", desc:"같은 5MB 다운샘플 + L1 file_integrity (face와 동일 파이프).", meta:"front file → base64"},
+      {n:2, t:"0.5s",  title:"MediaPipe Hand 21 키포인트 추출", desc:"손바닥 + 손가락 5개 각 4키포인트 = 21개. 4대선 추적 baseline.", meta:"브라우저 측 결정론"},
+      {n:3, t:"0.8s",  title:"4대선 자동 식별 (생명선·지능선·감정선·운명선)", desc:"손가락 베이스 + 키포인트 → 곡선 후보. 끊김·갈래 검출.", meta:"engine/divination/palm_scoring.py · ADR-030", adr:["ADR-030"], star:true},
+      {n:4, t:"1.0s",  title:"금성대 + 부속선 분류 (선택)", desc:"태양선·결혼선·자녀선·여행선 등 — 가시도에 따라 점수.", meta:"보조 분류"},
+      {n:5, t:"1.2s",  title:"4대선 결정론 점수 산출", desc:"각 선의 길이·깊이·곡률·끊김 점수. 120/120 골든셋 라벨 100% 일치 (ADR-030).", meta:"palm_scoring 685줄"},
+      {n:6, t:"1.5s",  title:"buildPalmPrompt — 옥선 할미 페르소나", desc:"4대선 점수 + 금성대 + 컨텍스트 → 한국 사극 노녀 어조 프롬프트.", meta:"front prompt builder"},
+      {n:7, t:"2~12s", title:"Gemini Flash Lite 자연어 풀이", desc:"옥선 할미 어조 + 결정론 점수 인용 + 운명 단정 회피.", meta:"/api/llm/chat", star:true},
+      {n:8, t:"12s",   title:"렌더링 — 4대선 SVG 오버레이 + 본문", desc:"손바닥 사진에 4대선 곡선 시각화 + 점수 차트 + 옥선 할미 본문.", ok:true},
+    ],
+    foot: "손금은 결정론 4대선 점수 + LLM 자연어. 의학 진단 X, ADR-006 자문 거절 정신."
+  },
+  name: {
+    title: "묵향 선생 이름 풀이 파이프라인",
+    hint: "/api/name/reading · 대법원 9389 한자 + 음운·자원오행 결정론",
+    tagClass: "name",
+    steps: [
+      {n:1, t:"0s",    title:"사용자 이름 입력 (한글)", desc:"성·이름 자동 분리 (통계청 KOSIS 300위 + γ 보정 ADR-033).", meta:"name_uniqueness", adr:["ADR-029","ADR-033"]},
+      {n:2, t:"0.1s",  title:"한자 후보 추출 (대법원 인명용 9389자)", desc:"한글 음 → 한자 후보 다중 (ADR-026 scourt API 9932자 확장 풀).", meta:"name_unihan · ADR-026", adr:["ADR-026"]},
+      {n:3, t:"0.2s",  title:"5중 결정론 분석", desc:"① 두음법칙(name_dueum) ② 발음오행(name_baleum) ③ 자원오행(name_saju_ohaeng ADR-027) ④ 81수리(name_strokes) ⑤ 음양배합(name_eumyang).", meta:"5217줄 16 모듈", adr:["ADR-027","ADR-028"], star:true},
+      {n:4, t:"0.3s",  title:"음운 결합 규칙 점검", desc:"한국어 음운 변동 Priority 1·2·3 (ADR-028·032). 어색한 결합 점수.", meta:"name_aesthetic + name_baleum"},
+      {n:5, t:"0.4s",  title:"불용한자 + 가족 서열 점검", desc:"부모·형제 이름과의 중복·금기 (ADR-010 사실성 분리, 백중숙계).", meta:"name_bulyong · name_sibling_preference", adr:["ADR-010"]},
+      {n:6, t:"0.5s",  title:"name_scoring 종합 점수", desc:"5개 영역 가중치 합산. 등급 산출 (대길·길·평·흉).", meta:"name_scoring 결정론"},
+      {n:7, t:"0.6s",  title:"buildNamePrompt — 묵향 선생 페르소나", desc:"한자 + 5중 점수 + 음운 결합 → 한국 사극 학자 어조 프롬프트.", meta:"front prompt builder"},
+      {n:8, t:"1~10s", title:"Gemini Flash Lite 자연어 풀이", desc:"묵향 선생 어조 + 5중 분석 인용 + 작명 권고 (선택).", meta:"/api/llm/chat", star:true},
+      {n:9, t:"10s",   title:"렌더링 — 한자 카드 + 5중 점수 + 본문", desc:"성·이름 한자 + 발음·자원 오행 게이지 + 81수리 + 묵향 선생 본문.", ok:true},
+    ],
+    foot: "본 시스템 가장 풍부한 결정론 도메인 — 5217줄 16 모듈 + 10 ADR (001·003·010·016·026·027·028·029·032·033)."
+  },
+  star: {
+    title: "성하 공자 별빛 풀이 파이프라인",
+    hint: "/api/star/reading · 서양 점성술 + 행성·궁·각도",
+    tagClass: "star",
+    steps: [
+      {n:1, t:"0s",    title:"사용자 생년월일시 + 출생지 좌표", desc:"위경도 → 황도좌표계 변환. 사주와 같은 입력 재활용 가능.", meta:"front 입력 통일"},
+      {n:2, t:"0.1s",  title:"행성 위치 계산 (10행성)", desc:"태양·달·수성·금성·화성·목성·토성·천왕성·해왕성·명왕성 황경. NASA JPL 또는 Swiss Ephemeris.", meta:"결정론 천문 계산", star:true},
+      {n:3, t:"0.2s",  title:"하우스 시스템 (Placidus/Whole Sign)", desc:"12 하우스 + ASC/MC + IC/DSC. 사용자 좌표 의존.", meta:"하우스 분할"},
+      {n:4, t:"0.3s",  title:"행성 간 각도 (aspects)", desc:"합·충·삼분·사분·육분 (0°·180°·120°·90°·60°). orb 허용 범위 ±5~8°.", meta:"각도 결정론"},
+      {n:5, t:"0.4s",  title:"별자리·궁·하우스 매핑", desc:"각 행성 → 12 별자리 (양·황소·…·물고기) + 12 하우스 + aspects dict.", meta:"룩업 테이블"},
+      {n:6, t:"0.5s",  title:"buildStarPrompt — 성하 공자 페르소나", desc:"행성·궁·각도 dict → 서양 점성술 학파 통설 인용 (마음·관계·직업).", meta:"front prompt builder"},
+      {n:7, t:"1~10s", title:"Gemini Flash Lite 자연어 풀이", desc:"성하 공자 (별빛) 어조 + 행성·각도 인용 + 단정 회피.", meta:"/api/llm/chat", star:true},
+      {n:8, t:"10s",   title:"렌더링 — 출생 차트 SVG + 본문", desc:"천체 차트 (행성 + 하우스 + 각도) 시각화 + 성하 공자 본문.", ok:true},
+    ],
+    foot: "본 시스템 7번째 점술가. 천문 계산 결정론 + LLM 자연어. 운명 단정 회피 ADR-006·014."
   }
 };
 
