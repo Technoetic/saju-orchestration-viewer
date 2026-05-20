@@ -230,17 +230,27 @@
           <text x="1240" y="382" font-size="12" fill="#e8d9b0">▸ lang</text>
         </g>
 
-        <!-- EDGES : input -> engines (9개) -->
+        <!-- EDGES : input -> engines (실 코드 매핑 정합)
+             INPUT y 중심: 1=85(생년) · 2=165(MBTI) · 3=245(꿈) · 4=325(점복) · 5=405(얼굴) · 6=485(손)
+             DOMAIN y 중심: 사주=83 · 관상=149 · 손금=215 · 이름=281 · 꿈=347 · 점복=413 · 별빛=479 · MBTI보조=537 · 임상=605
+        -->
         <g fill="none" stroke="#6e5a26" stroke-width="1.5" marker-end="url(#arr)">
-          <path class="edge" d="M240 85   C 280 85, 280 85, 320 83"/>
-          <path class="edge" d="M240 165  C 280 165,280 149,320 149"/>
-          <path class="edge" d="M240 245  C 280 245,280 215,320 215"/>
-          <path class="edge" d="M240 325  C 280 325,280 281,320 281"/>
-          <path class="edge" d="M240 325  C 280 325,280 347,320 347"/>
+          <!-- 생년월일시·성별 (y=85) → 사주(83) + 이름(281) -->
+          <path class="edge" d="M240 85   C 280 85, 280 83, 320 83"/>
+          <path class="edge" d="M240 85   C 280 85, 280 281,320 281"/>
+          <!-- MBTI (y=165) → 사주 융합(83) + MBTI 보조(537) -->
+          <path class="edge" d="M240 165  C 280 165,280 83, 320 83"/>
+          <path class="edge" d="M240 165  C 280 165,280 537,320 537"/>
+          <!-- 꿈 텍스트 (y=245) → 몽이 도령 꿈 해석(347) -->
+          <path class="edge" d="M240 245  C 280 245,280 347,320 347"/>
+          <!-- 타로/화패/주역 + question (y=325) → 화선 점복(413) + 별빛(479) -->
           <path class="edge" d="M240 325  C 280 325,280 413,320 413"/>
           <path class="edge" d="M240 325  C 280 325,280 479,320 479"/>
-          <path class="edge" d="M240 165  C 280 165,280 537,320 537"/>
-          <path class="edge" d="M240 325  C 280 325,280 585,320 585"/>
+          <!-- 얼굴 사진 (y=405) → 운학 도사 관상(149) -->
+          <path stroke="#ff9eb5" class="edge" d="M240 405  C 280 405,280 149,320 149"/>
+          <!-- 손 사진 (y=485) → 옥선 할미 손금(215) -->
+          <path stroke="#fcd34d" class="edge" d="M240 485  C 280 485,280 215,320 215"/>
+          <!-- 임상은 사용자 별도 자가검사 선택 (INPUT 직결 X — 별도 선택 단계) -->
         </g>
 
         <!-- EDGES : engines -> fusion (9개 → fusion box 230~450) -->
