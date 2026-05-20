@@ -1,0 +1,5 @@
+section{margin-top:38px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:14px}
+.sec-head .num{font-family:'JetBrains Mono',monospace;color:var(--gold-dim);font-size:13px;letter-spacing:.15em}
+.sec-head h2{margin:0;font-size:24px;color:var(--text);letter-spacing:.03em}
+.sec-head .hint{color:var(--text-mute);font-size:13px;margin-left:auto}

@@ -1,0 +1,29 @@
+:root{
+  --bg:#080d1c; --bg2:#0e1530; --panel:#101935; --panel2:#172147;
+  --gold:#d4af37; --gold-bri:#f4d35e; --gold-dim:#6e5a26;
+  --text:#e8d9b0; --text-dim:#9b8c63; --text-mute:#5f5638;
+  --line:#3a3220; --line-bri:#6e5a26;
+  --mok:#6dc375; --hwa:#ff7d6b; --to:#d4a857; --geum:#d0d0d0; --su:#6fb8ff;
+  --ok:#8de28d; --warn:#ffcc66; --err:#ff7a7a;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'Noto Serif KR','Gowun Batang',serif}
+body{
+  min-height:100vh;
+  background:
+    radial-gradient(1.5px 1.5px at 10% 20%,#fff8e0,transparent 60%),
+    radial-gradient(2px 2px at 30% 70%,#ffd97a,transparent 60%),
+    radial-gradient(1px 1px at 60% 30%,#fff8e0,transparent 60%),
+    radial-gradient(2px 2px at 80% 80%,#ffd97a,transparent 60%),
+    radial-gradient(1px 1px at 90% 15%,#fff8e0,transparent 60%),
+    radial-gradient(ellipse 70% 50% at 50% 0%,rgba(60,40,90,.35),transparent 70%),
+    linear-gradient(180deg,var(--bg) 0%,var(--bg2) 100%);
+  background-attachment:fixed;
+}
+body::before{
+  content:'月 下 夢';
+  position:fixed;inset:0;display:grid;place-items:center;
+  font-size:30vw;color:rgba(212,175,55,.035);letter-spacing:5vw;
+  pointer-events:none;z-index:0;white-space:nowrap;font-weight:800;
+}
+.wrap{position:relative;z-index:1;max-width:1480px;margin:0 auto;padding:32px 28px 80px}

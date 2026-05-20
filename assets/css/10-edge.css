@@ -1,0 +1,6 @@
+@keyframes flowDash{to{stroke-dashoffset:-40}}
+.edge.flowing{stroke-dasharray:6 6;animation:flowDash 1.2s linear infinite}
+
+.pipe-node rect{transition:filter .2s ease, stroke-width .2s ease}
+.pipe-node:hover rect{filter:brightness(1.4);stroke-width:2.5}
+.pipe-node:hover text{filter:brightness(1.2)}
