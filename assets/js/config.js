@@ -1,4 +1,4 @@
-export const API_BASE = "https://saju-mbti-fusion-production.up.railway.app";
+export const API_BASE = "https://saju-mbti-fusion.fly.dev";
 export const REFRESH_INTERVAL_MS = 10000;
 
 export const PIPELINE_TONES = {

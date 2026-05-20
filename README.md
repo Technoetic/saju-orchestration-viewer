@@ -1,6 +1,6 @@
 # 月下夢 LLM Orchestration Dashboard
 
-본 시스템 [月下夢](https://saju-mbti-fusion-production.up.railway.app/) (사주·MBTI 융합 SaaS)의 LLM 오케스트레이션 토폴로지 발표용 대시보드.
+본 시스템 [月下夢](https://saju-mbti-fusion.fly.dev/) (사주·MBTI 융합 SaaS)의 LLM 오케스트레이션 토폴로지 발표용 대시보드.
 
 ## 라이브
 
