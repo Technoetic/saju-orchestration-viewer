@@ -88,7 +88,20 @@ export const MENUS = {
       { key:'line-each',  name:'손금별 풀이',       glyph:'別 線', tier:'premium', badges:[],      est:'10~15분', desc:'생명선만 / 두뇌선만 / 감정선만 / 운명선만 — 각 손금 단독 깊이 풀이.' },
     ]
   },
-  name:       { master: '묵향 선생', masterSub: '대법원 9389 한자 작명',    items: [] },
+  name: {
+    master: '묵향 선생',
+    masterSub: '붓끝의 깊이를 헤아리는 선생 · 이름(작명) 풀이',
+    items: [
+      { key:'today-hanja', name:'오늘의 한자',          glyph:'今 字', tier:'free',    badges:[],      est:'5분',     desc:'매일 갱신되는 운명의 한자 한 글자. 의미와 추천 활용을 안내해드립니다.' },
+      { key:'classic',     name:'정통 이름 풀이',       glyph:'姓 名', tier:'free',    badges:[],      est:'5~10분',  desc:'자의·음오행·자원오행·수리오격 — 정통 성명학으로 풀어드립니다.' },
+      { key:'fate-hanja',  name:'운명의 한자',          glyph:'命 字', tier:'premium', badges:[],      est:'10분',    desc:'이름 속 한자 한 글자씩 깊이 풀어드립니다. 글자의 비밀이 그대 안에 있지요.' },
+      { key:'newborn',     name:'신생아 작명',          glyph:'初 名', tier:'premium', badges:['hot'], est:'15~20분', desc:'아기 이름 짓기 — 사주 분석 후 추천. 임산부 시장의 핵심 콘텐츠.' },
+      { key:'rename',      name:'개명 추천',            glyph:'改 名', tier:'premium', badges:[],      est:'15~20분', desc:'운이 안 좋을 때, 사주에 맞는 새 이름을 추천해드립니다.' },
+      { key:'biz',         name:'상호 작명',            glyph:'商 號', tier:'premium', badges:[],      est:'15~20분', desc:'가게·회사·브랜드 이름을 사업자의 사주와 함께 풀어드립니다.' },
+      { key:'pen',         name:'예명 작명',            glyph:'雅 號', tier:'premium', badges:['new'], est:'10~15분', desc:'작가·유튜버·아티스트의 필명·아호를 사주에 맞춰 지어드립니다.' },
+      { key:'saju-name',   name:'사주 + 이름 종합 분석', glyph:'合 命', tier:'premium', badges:['hot'], est:'15~20분', desc:'만월 아씨 + 묵향 선생 합작 — 사주와 이름이 잘 맞는지 종합 분석.' },
+    ]
+  },
   mbti:       { master: 'MBTI 프로필러', masterSub: '4학파 룩업 (viewer 전용)', items: [] },
   clinical:   { master: '임상 스크리닝', masterSub: '8 표준 척도 (viewer 전용)', items: [] },
 };
