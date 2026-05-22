@@ -112,5 +112,18 @@ export const MENUS = {
       { key:'myers',     name:'Myers-Briggs 16', glyph:'M B',  tier:'free', badges:['viewer-only'], est:'<1초', desc:'INTJ~ESFP 표준 16유형 + 사주-MBTI 융합(ADR-014).' },
     ]
   },
-  clinical:   { master: '임상 스크리닝', masterSub: '8 표준 척도 (viewer 전용)', items: [] },
+  clinical: {
+    master: '임상 스크리닝',
+    masterSub: '8 표준 척도 (LLM 0회 · viewer 전용)',
+    items: [
+      { key:'phq9', name:'PHQ-9 (우울)',     glyph:'P 9', tier:'free', badges:['viewer-only'], est:'5분', desc:'9문항·0~27·cutoff 5/10/15/20. 우울 자기 점검.' },
+      { key:'gad7', name:'GAD-7 (불안)',     glyph:'G 7', tier:'free', badges:['viewer-only'], est:'3분', desc:'7문항·0~21·cutoff 5/10/15. 범불안 자기 점검.' },
+      { key:'isi',  name:'ISI (불면)',       glyph:'I S', tier:'free', badges:['viewer-only'], est:'3분', desc:'7문항·0~28·cutoff 8/15/22. 불면 자기 점검.' },
+      { key:'psqi', name:'PSQI (수면 질)',   glyph:'P S', tier:'free', badges:['viewer-only'], est:'10분', desc:'19문항·0~21·cutoff 5. 1개월 수면 품질.' },
+      { key:'bdik', name:'BDI-K (한국 우울)', glyph:'B K', tier:'free', badges:['viewer-only'], est:'10분', desc:'21문항·한국판 표준화. 임상 우울 진단 보조.' },
+      { key:'cesd', name:'CES-D (역학 우울)', glyph:'C D', tier:'free', badges:['viewer-only'], est:'10분', desc:'20문항·0~60·cutoff 16/21. 역학 표본 우울.' },
+      { key:'staik',name:'STAI-K (한국 불안)', glyph:'S K', tier:'free', badges:['viewer-only'], est:'15분', desc:'40문항·상태·특성 분리. 한국판 표준화.' },
+      { key:'irt',  name:'IRT (꿈 외상)',     glyph:'I R', tier:'free', badges:['viewer-only'], est:'7분', desc:'꿈 외상 후 스트레스 평가. IRT 리스크립팅 연계.' },
+    ]
+  },
 };
