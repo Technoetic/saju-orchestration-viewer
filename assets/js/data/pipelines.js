@@ -1,5 +1,6 @@
 export const PIPELINES = {
   saju: {
+    classic: {
     title: "사주 엔진 파이프라인",
     hint: "/api/saju · 결정론 80% + LLM 자연어 1회",
     tagClass: "saju",
@@ -20,8 +21,10 @@ export const PIPELINES = {
       {n:14,t:"12s",   title:"렌더링 — 4주 카드 + 십성·운성표 + 오행 차트 + 대운 타임라인", desc:"만월 아씨 사극 본문 + 격국·용신 + 8 대운 80년 + 세운 ±10년 + 성명 보완도.", meta:"renderSajuResult · step-result", ok:true},
     ],
     foot: "관상(서버 100%) vs 사주(클라이언트 80%) — 결정론이 본질, LLM은 어조 변환"
+    },
   },
   mbti: {
+    myers: {
     title: "MBTI 프로필러 파이프라인",
     hint: "/api/profile/{type} · Jung·Myers·Keirsey·Socionics 4학파 통합",
     tagClass: "mbti",
@@ -34,8 +37,10 @@ export const PIPELINES = {
       {n:6, t:"0.25s", title:"응답 dict 반환", desc:"trait map + 강·약점 + 면책. 사주 fusion에서 추가 데이터로 사용 가능.", ok:true},
     ],
     foot: "MBTI는 결정론 룩업 — 같은 4자 = 같은 응답. LLM 호출 0회."
+    },
   },
   dream: {
+    classic: {
     title: "꿈 해석 파이프라인 (HvDC + Hobson + 14 핵심 에이전트)",
     hint: "/api/dream/interpret_v2 · 멀티에이전트 14 핵심 + 6 보조",
     tagClass: "dream",
@@ -52,8 +57,10 @@ export const PIPELINES = {
       {n:10,t:"15s",   title:"렌더링 — 몽이 도령 본문 + DreamNet 그래프 시각화", desc:"꿈 상징 노드 + 학파별 해석 카드 + 임상 권고 + 일기 저장.", ok:true},
     ],
     foot: "본 시스템에서 가장 복잡한 도메인 — 20 에이전트 + 4 학파 + 임상 측정 통합"
+    },
   },
   divination: {
+    classic: {
     title: "점복 파이프라인 (타로 · 주역 · 화패)",
     hint: "/api/tarot · /iching · /hwapae · 결정론 난수 + 카드 의미 매핑",
     tagClass: "divination",
@@ -68,8 +75,10 @@ export const PIPELINES = {
       {n:8, t:"10s",   title:"렌더링 — 카드 그림 + 위치 + 의미 + 본문", desc:"화선 낭자 사극 본문 + 카드 SVG/이미지 + 면책.", ok:true},
     ],
     foot: "타로·주역·화패는 결정론 분류 + LLM 자연어. 운명 단정 회피 ADR-006."
+    },
   },
   clinical: {
+    phq9: {
     title: "임상 스크리닝 파이프라인",
     hint: "/api/clinical/screening · PHQ-9·GAD-7·ISI·PSQI·BDI-K·CES-D·STAI-K·IRT",
     tagClass: "clinical",
@@ -83,8 +92,10 @@ export const PIPELINES = {
       {n:7, t:"5분",   title:"렌더링 — 점수 + 카테고리 + 권고 + 트렌드", desc:"본 시스템 유일한 의학 척도 도메인. 진단 X, 자기 점검 도구.", ok:true},
     ],
     foot: "임상 척도는 LLM 0회 호출 — 100% 결정론. ADR-006 자문 거절 정신 유지."
+    },
   },
   face: {
+    classic: {
     title: "운학 도사 관상 풀이 파이프라인",
     hint: "/api/face/reading · Opus Vision JSON + Gemini 사극 (Stage 1·2)",
     tagClass: "face",
@@ -105,8 +116,10 @@ export const PIPELINES = {
       {n:14,t:"21s",   title:"클라이언트 6종 UI 시각화", desc:"12궁 막대 + 삼정 도넛 + 오관 레이더 + 5형 배지 + 신·기 게이지 + 해부학 카드 + 운학 도사 사극 본문.", meta:"Phase 22 캐릭터화", ok:true},
     ],
     foot: "관상은 본 세션 11 phase 진화 (Phase 12·17~22 + ADR-034·035·036). 운명 매핑 차단 사실성 분리 절대 정합."
+    },
   },
   palm: {
+    classic: {
     title: "옥선 할미 손금 풀이 파이프라인",
     hint: "/api/palm/reading · 4대선 + 금성대 결정론 + Gemini 자연어",
     tagClass: "palm",
@@ -121,8 +134,10 @@ export const PIPELINES = {
       {n:8, t:"12s",   title:"렌더링 — 4대선 SVG 오버레이 + 본문", desc:"손바닥 사진에 4대선 곡선 시각화 + 점수 차트 + 옥선 할미 본문.", ok:true},
     ],
     foot: "손금은 결정론 4대선 점수 + LLM 자연어. 의학 진단 X, ADR-006 자문 거절 정신."
+    },
   },
   name: {
+    classic: {
     title: "묵향 선생 이름 풀이 파이프라인",
     hint: "/api/name/reading · 대법원 9389 한자 + 음운·자원오행 결정론",
     tagClass: "name",
@@ -138,8 +153,10 @@ export const PIPELINES = {
       {n:9, t:"10s",   title:"렌더링 — 한자 카드 + 5중 점수 + 본문", desc:"성·이름 한자 + 발음·자원 오행 게이지 + 81수리 + 묵향 선생 본문.", ok:true},
     ],
     foot: "본 시스템 가장 풍부한 결정론 도메인 — 5217줄 16 모듈 + 10 ADR (001·003·010·016·026·027·028·029·032·033)."
+    },
   },
   star: {
+    classic: {
     title: "성하 공자 별빛 풀이 파이프라인",
     hint: "/api/star/reading · 서양 점성술 + 행성·궁·각도",
     tagClass: "star",
@@ -154,5 +171,6 @@ export const PIPELINES = {
       {n:8, t:"10s",   title:"렌더링 — 출생 차트 SVG + 본문", desc:"천체 차트 (행성 + 하우스 + 각도) 시각화 + 성하 공자 본문.", ok:true},
     ],
     foot: "⚠ 백엔드 미구현 (설계만) — web/server.py에 /api/star/reading 라우트 없음. 본 파이프라인은 7인 점술가 후속 확장 계획. 다른 8개 도메인은 실제 라우트 가동 중."
+    },
   }
 };
