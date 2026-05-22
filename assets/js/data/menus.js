@@ -79,7 +79,15 @@ export const MENUS = {
       { key:'feng-shui',        name:'풍수 인테리어',   glyph:'風 水', tier:'premium', badges:['new'], est:'15분',    desc:'방 배치·색상 추천·길한 물건 — 공간이 운을 만드는 인테리어.' },
     ]
   },
-  palm:       { master: '옥선 할미', masterSub: '4대선 + 금성대',           items: [] },
+  palm: {
+    master: '옥선 할미',
+    masterSub: '길고 깊은 손금을 풀어주는 할미 · 손금 풀이',
+    items: [
+      { key:'today-line', name:'오늘의 손금 한 줄', glyph:'今 線', tier:'free',    badges:[],      est:'5분',     desc:'매일 손금 한 가지 의미 — 짧은 콘텐츠로 가볍게 배우시게.' },
+      { key:'classic',    name:'정통 손금 풀이',    glyph:'掌 紋', tier:'free',    badges:[],      est:'30~60초', desc:'양손·4대 손금 종합 — Opus 4.7 Vision 멀티모달 분석 (ADR-143).' },
+      { key:'line-each',  name:'손금별 풀이',       glyph:'別 線', tier:'premium', badges:[],      est:'10~15분', desc:'생명선만 / 두뇌선만 / 감정선만 / 운명선만 — 각 손금 단독 깊이 풀이.' },
+    ]
+  },
   name:       { master: '묵향 선생', masterSub: '대법원 9389 한자 작명',    items: [] },
   mbti:       { master: 'MBTI 프로필러', masterSub: '4학파 룩업 (viewer 전용)', items: [] },
   clinical:   { master: '임상 스크리닝', masterSub: '8 표준 척도 (viewer 전용)', items: [] },

@@ -690,6 +690,37 @@ export const PIPELINES = {
       ],
       foot: "손금은 결정론 4대선 점수 + LLM 자연어. 의학 진단 X, ADR-006 자문 거절 정신.",
     },
+    'today-line': {
+      title: "오늘의 손금 한 줄 파이프라인 (사진 미입력 — 학파 라벨 풀 인용)",
+      hint: "/api/content/reading char_key='palm' content_key='today-line' · Vision 미호출",
+      tagClass: "palm",
+      steps: [
+        {n:1, t:"0s",    title:"사용자 입력 1필드 (todayLine select)", desc:"contents.js palm.today-line.fields[] — life/head/heart/fate/random 중 1 선택. 사진 미입력 (imageB64 X).", meta:"front/js/data/contents.js#palm.items[0]"},
+        {n:2, t:"0.1s",  title:"L1 위기 신호 검사 + palm 학파 메타 인용", desc:"random 선택 시 KST 일자 기반 deterministic seed → 4 본선 중 1 결정. engine/divination/palm/knowledge.PALM_SCHOOLS 6학파 라벨 인용 (사진 미입력 분기).", meta:"web/server.py 2509~2546 palm 분기 + knowledge.py 664줄", adr:["ADR-006","ADR-030"], star:true},
+        {n:3, t:"0.15s", title:"라인별 결정론 통설 dict 룩업 (사진 미열람 모드)", desc:"todayLine='life' → 생명선 통설 1줄 (활력·체력 결의 흐름). 'head' → 두뇌선 통설 / 'heart' → 감정선 / 'fate' → 운명선 통설. 학파 인용만, 라이브 분류 X.", meta:"engine/divination/palm/knowledge.py 라인별 라벨 풀"},
+        {n:4, t:"0.2s",  title:"buildContentPrompt — 옥선 할미 페르소나 (사진 미열람 모드)", desc:"system message: '사진 미입력 — 학파·통설 인용으로만. 결혼·이혼·정신질환 단정 어휘 X (ADR-113). 짧고 가볍게 한 줄 톤.' todayLine 주입.", meta:"web/server.py post_content_reading prompt builder", adr:["ADR-006","ADR-113"]},
+        {n:5, t:"1~3s",  title:"POST /api/content/reading → Gemini Flash Lite 짧은 자연어", desc:"Vision 미호출 (사진 X). 옥선 할미 사극 노녀 어조 200~400자 짧은 한 줄. 결정론 통설을 어조로만 변환.", meta:"web/server.py#post_content_reading", star:true},
+        {n:6, t:"3s",    title:"단정·결혼·이혼 어휘 sanitize (ADR-113·116)", desc:"_sanitize_common_assertion_words — '결혼한다·이혼한다·우울증·정신병' 등 IHRA 강령 어휘 차단. '대운·금전수·길흉화복' → '결의 흐름'.", meta:"web/server.py 171~207 ADR-113·116", adr:["ADR-006","ADR-113","ADR-116"], warn:true},
+        {n:7, t:"3.1s",  title:"렌더링 — 손금 한 줄 카드 + 옥선 할미 짧은 본문", desc:"todayLine 라벨 + 학파 통설 1줄 카드 + 옥선 할미 사극 본문. 사진 영역 비활성 UI.", meta:"front 렌더러", ok:true},
+      ],
+      foot: "정통 손금(8단계, Vision 호출)의 사진 미입력 경량 버전 — Vision 미호출. /api/content/reading 단일 라우트. ADR-113 결혼·이혼·정신질환 단정 차단 정합.",
+    },
+    'line-each': {
+      title: "손금별 풀이 파이프라인 (단일 손금 깊이 + Vision 호출)",
+      hint: "/api/content/reading char_key='palm' content_key='line-each' · imageB64 입력 시 Vision Opus 4.7 (ADR-143)",
+      tagClass: "palm",
+      steps: [
+        {n:1, t:"0s",    title:"사용자 입력 3필드 + 사진 (targetLine·palmHand·concern·imageB64)", desc:"contents.js palm.line-each.fields[] — targetLine select 4종 (life/head/heart/fate) + palmHand select 3종 (left/right/both) + concern textarea (선택). 사진 필수.", meta:"front/js/data/contents.js#palm.items[2]"},
+        {n:2, t:"0.3s",  title:"이미지 다운샘플 + L1 file_integrity 검사", desc:"5MB 한도 + JPEG 0.88 + 1280px 최장변. palmHand='both' 시 좌우 2장 권유. 위변조·EXIF 점검.", meta:"front file → base64 + engine/safety/file_integrity"},
+        {n:3, t:"0.5s",  title:"palm 결정론 Phase 2 — Vision 풀 호출 분기 진입", desc:"web/server.py 2509~2536 imageB64 감지 → Phase 2 분기. PALM_SCHOOLS 6학파 메타 + targetLine 라벨 풀 (FATE_LINE_STRAIGHT 등) 인용.", meta:"web/server.py 2509~2546 palm 분기", adr:["ADR-030","ADR-081"], star:true},
+        {n:4, t:"0.8s",  title:"targetLine별 결정론 라벨 풀 좁히기 + palmHand 컨텍스트", desc:"targetLine='heart' → MERCURY_LINE_CONTINUOUS/FRAGMENTED + MARRIAGE_LINE 라벨 풀 적용. palmHand='left'(선천)/'right'(후천)/'both'(비교) 컨텍스트 dict.", meta:"engine/divination/palm/knowledge.py 라인별 라벨", adr:["ADR-030"]},
+        {n:5, t:"1.0s",  title:"buildContentPrompt — 옥선 할미 (단일 손금 강조 + Vision 컨텍스트)", desc:"system message: 'targetLine 1종만 깊이 풀이. 다른 본선 인용 X. ADR-113 결혼·이혼·정신질환 단정 차단. concern 응답.' targetLine + palmHand + concern + imageB64 주입.", meta:"web/server.py post_content_reading prompt builder", adr:["ADR-006","ADR-113","ADR-143"]},
+        {n:6, t:"3~12s", title:"Vision Opus 4.7 자연어 풀이 (BizRouter + Anthropic SDK fallback)", desc:"engine/divination/palm/reading._call_vision — Claude Opus 4.7 디폴트 (ADR-143). 환경변수 override 허용. 옥선 할미 사극 노녀 어조 800~1200자 단일 손금 깊이.", meta:"engine/divination/palm/reading.py + /api/content/reading", adr:["ADR-143"], star:true},
+        {n:7, t:"12s",   title:"단정·IHRA 강령 어휘 sanitize (ADR-113·116)", desc:"_sanitize_common_assertion_words + _sanitize_foreign_hallucination + _sanitize_korean_grammar_dupes 3중. '결혼·이혼·정신병·암' 단정 차단 + 다국어 환각 필터.", meta:"web/server.py 171~207 ADR-113·115·116", adr:["ADR-006","ADR-113","ADR-115","ADR-116"], warn:true},
+        {n:8, t:"12.1s", title:"렌더링 — 단일 손금 카드 + palmHand 메타 + 본문", desc:"targetLine 라벨 + palmHand(선천/후천/비교) 카드 + 학파 통설 인용 + 옥선 할미 깊이 본문. 사진에 해당 손금 강조 오버레이.", meta:"front 렌더러", ok:true},
+      ],
+      foot: "정통 손금(8단계)의 단일 손금 깊이 버전 — Vision Opus 4.7 호출 (ADR-143). targetLine 1종만 깊이, 의학 진단 X, ADR-113 IHRA 강령 정합.",
+    },
   },
   name: {
     classic: {
