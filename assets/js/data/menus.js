@@ -52,7 +52,20 @@ export const MENUS = {
       { key:'life-card',         name:'인생 카드',             glyph:'一 生', tier:'premium', badges:['hot'], est:'15~20분', desc:'인생 전체를 보는 10장 스프레드. 과거-현재-미래를 종합한 평생 풀이서.' },
     ]
   },
-  star:       { master: '성하 공자', masterSub: '서양 점성술 + 동양 28수',   items: [] },
+  star: {
+    master: '성하 공자',
+    masterSub: '별의 강(銀河)의 귀공자 · 별빛(점성) 풀이',
+    items: [
+      { key:'today-zodiac',  name:'오늘의 별자리 운세', glyph:'日 星',  tier:'free',    badges:['hot'],         est:'5분',     desc:'12 별자리 × 매일 갱신 — 오늘의 천공 흐름을 가볍게 짚어드립니다.' },
+      { key:'big3',          name:'빅3 분석',           glyph:'三 星',  tier:'free',    badges:[],              est:'5~10분',  desc:'태양·달·상승 — 점성술의 가장 친숙한 입문 풀이.' },
+      { key:'classic',       name:'정통 별빛 풀이',     glyph:'星 河',  tier:'premium', badges:[],              est:'15~20분', desc:'출생 차트(Natal Chart) — 10 행성 × 12 하우스 종합 점성술.' },
+      { key:'love-stars',    name:'별의 연서',          glyph:'戀 星',  tier:'premium', badges:['hot'],         est:'10~15분', desc:'연애 점성술 — 별자리 속 숨겨진 인연의 좌표를 풀어드립니다.' },
+      { key:'compatibility', name:'별자리 궁합',        glyph:'合 星',  tier:'premium', badges:[],              est:'10~15분', desc:'12 × 12 = 144 조합 — 빅3 매칭, 상극/조화 분석.' },
+      { key:'east28',        name:'동양 28수 풀이',     glyph:'二十八', tier:'premium', badges:['new'],         est:'15~20분', desc:'한국 천상열차분야지도 기반 — 다른 앱에 없는 동양 점성술.' },
+      { key:'transit',       name:'행운의 시기',        glyph:'運 行',  tier:'premium', badges:[],              est:'10분',    desc:'현재 행성 흐름(트랜짓) — 좋은 시기·어려운 시기를 예측해드립니다.' },
+      { key:'saju-star',     name:'사주 + 별빛 통합 분석', glyph:'日 月', tier:'premium', badges:['hot'],         est:'20분',    desc:'만월 아씨 + 성하 공자 합작 — 동서양 융합 풀이의 강력한 차별화.' },
+    ]
+  },
   face:       { master: '운학 도사', masterSub: 'Opus Vision + 결정론 관상', items: [] },
   palm:       { master: '옥선 할미', masterSub: '4대선 + 금성대',           items: [] },
   name:       { master: '묵향 선생', masterSub: '대법원 9389 한자 작명',    items: [] },
