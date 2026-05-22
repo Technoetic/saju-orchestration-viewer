@@ -1,10 +1,10 @@
 export const PIPELINES = {
   saju: {
     classic: {
-    title: "사주 엔진 파이프라인",
-    hint: "/api/saju · 결정론 80% + LLM 자연어 1회",
-    tagClass: "saju",
-    steps: [
+      title: "사주 엔진 파이프라인",
+      hint: "/api/saju · 결정론 80% + LLM 자연어 1회",
+      tagClass: "saju",
+      steps: [
       {n:1, t:"0s",    title:"사용자 입력 5필드", desc:"이름·생년월일시·성별·시간 미상 시 12지 힌트. 한글 이름은 자동 성·이름 분리 (대법원 9389한자).", meta:"front step-input"},
       {n:2, t:"0.1s",  title:"절기 12개 정밀 계산", desc:"황경 → JD 변환 + 뉴턴 반복. 사주 연도 입춘 기준 결정.", meta:"calcSolarTerms · 클라이언트 JS"},
       {n:3, t:"0.2s",  title:"사주 4주(年月日時) 천간·지지 확정", desc:"60갑자 결정론. 日柱·日干 = 본원. 같은 입력 = 같은 출력 100%.", meta:"ADR-002 옵션 A 디폴트", star:true},
@@ -19,32 +19,32 @@ export const PIPELINES = {
       {n:12,t:"12.1s", title:"캐시 + Analytics 적재", desc:"prompt hash → LLM 응답 캐시. MBTI counts → /metrics (Prometheus 호환).", meta:"ADR-013", adr:["ADR-013"]},
       {n:13,t:"12.2s", title:"위기 신호 탐지 + 법적 면책 부착", desc:'"죽고싶다·자살" → 1393·1577-0199. 의료·법률·투자 자문 면책. 사주→MBTI 단정 회피.', meta:"crisis_alert + legal_notice · ADR-006·014", adr:["ADR-006","ADR-014"], warn:true},
       {n:14,t:"12s",   title:"렌더링 — 4주 카드 + 십성·운성표 + 오행 차트 + 대운 타임라인", desc:"만월 아씨 사극 본문 + 격국·용신 + 8 대운 80년 + 세운 ±10년 + 성명 보완도.", meta:"renderSajuResult · step-result", ok:true},
-    ],
-    foot: "관상(서버 100%) vs 사주(클라이언트 80%) — 결정론이 본질, LLM은 어조 변환"
+      ],
+      foot: "관상(서버 100%) vs 사주(클라이언트 80%) — 결정론이 본질, LLM은 어조 변환",
     },
   },
   mbti: {
     myers: {
-    title: "MBTI 프로필러 파이프라인",
-    hint: "/api/profile/{type} · Jung·Myers·Keirsey·Socionics 4학파 통합",
-    tagClass: "mbti",
-    steps: [
+      title: "MBTI 프로필러 파이프라인",
+      hint: "/api/profile/{type} · Jung·Myers·Keirsey·Socionics 4학파 통합",
+      tagClass: "mbti",
+      steps: [
       {n:1, t:"0s",    title:"사용자 입력 MBTI 4자 (INTJ·ENFP 등)", desc:"또는 사주에서 자동 추정 (ADR-014 사주-MBTI 예외).", meta:"16 유형"},
       {n:2, t:"0.05s", title:"프로필 룩업", desc:"Jung 8 인지기능 (Ni·Ne·Si·Se·Ti·Te·Fi·Fe) + Keirsey 4기질 + Socionics 16유형 매핑.", meta:"engine/mbti/profiles · ADR-024", adr:["ADR-024"], star:true},
       {n:3, t:"0.1s",  title:"trait map 산출", desc:"우세 인지기능 4종 + 약점 인지기능 + 4기질 분류 (Guardian/Artisan/Idealist/Rational).", meta:"socionics v2 16×16 매트릭스"},
       {n:4, t:"0.15s", title:"성격 특성 dict 응답", desc:"강점 N건 + 약점 N건 + 직업 적성 카테고리 + 관계 스타일.", meta:"통계 기반, 단정 회피"},
       {n:5, t:"0.2s",  title:"법적 면책 (인과 단정 회피)", desc:"MBTI는 통계적 경향. 단정 표현 금지. ADR-014 사주-MBTI 예외 적용.", meta:"ADR-006·014", adr:["ADR-006","ADR-014"], warn:true},
       {n:6, t:"0.25s", title:"응답 dict 반환", desc:"trait map + 강·약점 + 면책. 사주 fusion에서 추가 데이터로 사용 가능.", ok:true},
-    ],
-    foot: "MBTI는 결정론 룩업 — 같은 4자 = 같은 응답. LLM 호출 0회."
+      ],
+      foot: "MBTI는 결정론 룩업 — 같은 4자 = 같은 응답. LLM 호출 0회.",
     },
   },
   dream: {
     classic: {
-    title: "꿈 해석 파이프라인 (HvDC + Hobson + 14 핵심 에이전트)",
-    hint: "/api/dream/interpret_v2 · 멀티에이전트 14 핵심 + 6 보조",
-    tagClass: "dream",
-    steps: [
+      title: "꿈 해석 파이프라인 (HvDC + Hobson + 14 핵심 에이전트)",
+      hint: "/api/dream/interpret_v2 · 멀티에이전트 14 핵심 + 6 보조",
+      tagClass: "dream",
+      steps: [
       {n:1, t:"0s",    title:"꿈 텍스트 입력", desc:"사용자 자유 서술 (예: '하늘을 날아다니는 꿈을 꿨다').", meta:"max 2000자"},
       {n:2, t:"0.1s",  title:"HvDC 코딩 (Hall + Van de Castle)", desc:"등장인물·상호작용·감정·환경·물체 5축 분류. DreamBank 22,000건 정규화 기반.", meta:"dream_lex/hvdc"},
       {n:3, t:"0.3s",  title:"Hobson 신경생리 분류", desc:"AIM 모델 (Activation·Input·Modulation). REM 단계 특성 매칭.", meta:"dream_lex/hobson"},
@@ -55,16 +55,16 @@ export const PIPELINES = {
       {n:8, t:"10~15s",title:"Gemini Flash Lite 자연어 풀이", desc:"한국 사극 도사 어조 + 학파별 인용 + 단정 회피 + 임상 권고.", meta:"/api/llm/chat", star:true},
       {n:9, t:"15s",   title:"위기 신호 + 면책 + 임상 권고 라우팅", desc:"악몽·외상 키워드 탐지 → PSQI 권유 + 1393. 임상 의심 시 ISI/STAI-K 진입.", meta:"ADR-006 + 임상 스크리닝", warn:true},
       {n:10,t:"15s",   title:"렌더링 — 몽이 도령 본문 + DreamNet 그래프 시각화", desc:"꿈 상징 노드 + 학파별 해석 카드 + 임상 권고 + 일기 저장.", ok:true},
-    ],
-    foot: "본 시스템에서 가장 복잡한 도메인 — 20 에이전트 + 4 학파 + 임상 측정 통합"
+      ],
+      foot: "본 시스템에서 가장 복잡한 도메인 — 20 에이전트 + 4 학파 + 임상 측정 통합",
     },
   },
   divination: {
     classic: {
-    title: "점복 파이프라인 (타로 · 주역 · 화패)",
-    hint: "/api/tarot · /iching · /hwapae · 결정론 난수 + 카드 의미 매핑",
-    tagClass: "divination",
-    steps: [
+      title: "점복 파이프라인 (타로 · 주역 · 화패)",
+      hint: "/api/tarot · /iching · /hwapae · 결정론 난수 + 카드 의미 매핑",
+      tagClass: "divination",
+      steps: [
       {n:1, t:"0s",    title:"사용자 입력 (카드 종류·스프레드·질문)", desc:"타로 22 메이저·56 마이너 / 주역 64괘 / 화투 48패.", meta:"카드 풀 선택"},
       {n:2, t:"0.1s",  title:"seed 결정 (사용자 + timestamp + UUID)", desc:"결정론 시드 → 같은 seed = 같은 카드 (재현 가능).", meta:"hashlib.sha256"},
       {n:3, t:"0.2s",  title:"카드 추출 (Fisher-Yates 셔플)", desc:"스프레드 위치별 카드 + 정·역방향. 타로 켈틱 10장 / 주역 6효 / 화패 6패.", meta:"engine/divination/hwapae 364줄"},
@@ -73,16 +73,16 @@ export const PIPELINES = {
       {n:6, t:"0.5s",  title:"buildDivinationPrompt — 화선 낭자 페르소나", desc:"카드 + 위치 + 의미 + 질문 컨텍스트 → Gemini 자연어 변환 입력.", meta:"front prompt builder"},
       {n:7, t:"1~10s", title:"Gemini 자연어 풀이", desc:"화선 낭자 한국 무가 어조. 카드 결정론 데이터 인용, 운명 단정 회피.", meta:"/api/llm/chat", star:true},
       {n:8, t:"10s",   title:"렌더링 — 카드 그림 + 위치 + 의미 + 본문", desc:"화선 낭자 사극 본문 + 카드 SVG/이미지 + 면책.", ok:true},
-    ],
-    foot: "타로·주역·화패는 결정론 분류 + LLM 자연어. 운명 단정 회피 ADR-006."
+      ],
+      foot: "타로·주역·화패는 결정론 분류 + LLM 자연어. 운명 단정 회피 ADR-006.",
     },
   },
   clinical: {
     phq9: {
-    title: "임상 스크리닝 파이프라인",
-    hint: "/api/clinical/screening · PHQ-9·GAD-7·ISI·PSQI·BDI-K·CES-D·STAI-K·IRT",
-    tagClass: "clinical",
-    steps: [
+      title: "임상 스크리닝 파이프라인",
+      hint: "/api/clinical/screening · PHQ-9·GAD-7·ISI·PSQI·BDI-K·CES-D·STAI-K·IRT",
+      tagClass: "clinical",
+      steps: [
       {n:1, t:"0s",    title:"사용자 선택 척도", desc:"우울 (PHQ-9·BDI-K·CES-D) / 불안 (GAD-7·STAI-K) / 수면 (ISI·PSQI) / IRT (꿈 외상).", meta:"engine/clinical 8건"},
       {n:2, t:"0~5분", title:"문항 응답 수집 (대화형)", desc:"PHQ-9 9문항 4점 · GAD-7 7문항 · ISI 7문항 · 각 척도 표준 점수 산출.", meta:"front 대화형 UI"},
       {n:3, t:"5분",   title:"표준 점수 계산", desc:"PHQ-9 0~27 (5/10/15/20 cutoff). GAD-7 0~21. ISI 0~28.", meta:"결정론 룩업", star:true},
@@ -90,16 +90,16 @@ export const PIPELINES = {
       {n:5, t:"5분",   title:"위기 신호 탐지 (강도 의심)", desc:"PHQ-9 9번 문항 (자해) 양성 → 1393·1577-0199 + 119 자동 부착.", meta:"crisis_alert", warn:true},
       {n:6, t:"5분",   title:"트렌드 저장 + 그래프", desc:"diary/clinical_log 적재 → /api/clinical/trend 시계열.", meta:"engine/storage"},
       {n:7, t:"5분",   title:"렌더링 — 점수 + 카테고리 + 권고 + 트렌드", desc:"본 시스템 유일한 의학 척도 도메인. 진단 X, 자기 점검 도구.", ok:true},
-    ],
-    foot: "임상 척도는 LLM 0회 호출 — 100% 결정론. ADR-006 자문 거절 정신 유지."
+      ],
+      foot: "임상 척도는 LLM 0회 호출 — 100% 결정론. ADR-006 자문 거절 정신 유지.",
     },
   },
   face: {
     classic: {
-    title: "운학 도사 관상 풀이 파이프라인",
-    hint: "/api/face/reading · Opus Vision JSON + Gemini 사극 (Stage 1·2)",
-    tagClass: "face",
-    steps: [
+      title: "운학 도사 관상 풀이 파이프라인",
+      hint: "/api/face/reading · Opus Vision JSON + Gemini 사극 (Stage 1·2)",
+      tagClass: "face",
+      steps: [
       {n:1, t:"0s",    title:"사용자 사진 캡처 + 클라이언트 전처리", desc:"camera/file 업로드 → 5MB 초과 시 1280px JPEG 0.85 자동 축소 (ADR-035) + MediaPipe 478 키포인트 추출.", meta:"front downsampleDataUrl", adr:["ADR-035"]},
       {n:2, t:"0.2s",  title:"HTTP POST + fetchWithRetry", desc:"5xx 1회 자동 재시도 3초 백오프. payload: image_base64 + age/gender/question + metrics.landmarks.", meta:"front fetchWithRetry"},
       {n:3, t:"0.3s",  title:"L1 파일 무결성 + 7MB 가드", desc:"매직 넘버 PNG/JPEG/HEIC/AVIF 자동 감지 + 크기 초과 시 HTTP 413.", meta:"engine/safety/file_integrity · ADR-011", adr:["ADR-011"]},
@@ -114,16 +114,16 @@ export const PIPELINES = {
       {n:12,t:"20.2s", title:"법적 면책 부착 + 응답 dict 조립", desc:"의료·법률·투자 면책 자동. anatomical_description + palace_scores + face_shape + facial_features 노출.", meta:"build_legal_footer"},
       {n:13,t:"20.3s", title:"캐시 저장 + LLM 운영 모니터링 (1%)", desc:"step_archive/face_reading_cache + llm_output_samples/<date>.jsonl + 운명 어휘 카운터.", meta:"ADR-036 (5회차)", adr:["ADR-036"]},
       {n:14,t:"21s",   title:"클라이언트 6종 UI 시각화", desc:"12궁 막대 + 삼정 도넛 + 오관 레이더 + 5형 배지 + 신·기 게이지 + 해부학 카드 + 운학 도사 사극 본문.", meta:"Phase 22 캐릭터화", ok:true},
-    ],
-    foot: "관상은 본 세션 11 phase 진화 (Phase 12·17~22 + ADR-034·035·036). 운명 매핑 차단 사실성 분리 절대 정합."
+      ],
+      foot: "관상은 본 세션 11 phase 진화 (Phase 12·17~22 + ADR-034·035·036). 운명 매핑 차단 사실성 분리 절대 정합.",
     },
   },
   palm: {
     classic: {
-    title: "옥선 할미 손금 풀이 파이프라인",
-    hint: "/api/palm/reading · 4대선 + 금성대 결정론 + Gemini 자연어",
-    tagClass: "palm",
-    steps: [
+      title: "옥선 할미 손금 풀이 파이프라인",
+      hint: "/api/palm/reading · 4대선 + 금성대 결정론 + Gemini 자연어",
+      tagClass: "palm",
+      steps: [
       {n:1, t:"0s",    title:"사용자 손바닥 사진 + 손(좌/우) + 컨텍스트", desc:"같은 5MB 다운샘플 + L1 file_integrity (face와 동일 파이프).", meta:"front file → base64"},
       {n:2, t:"0.5s",  title:"MediaPipe Hand 21 키포인트 추출", desc:"손바닥 + 손가락 5개 각 4키포인트 = 21개. 4대선 추적 baseline.", meta:"브라우저 측 결정론"},
       {n:3, t:"0.8s",  title:"4대선 자동 식별 (생명선·지능선·감정선·운명선)", desc:"손가락 베이스 + 키포인트 → 곡선 후보. 끊김·갈래 검출.", meta:"engine/divination/palm_scoring.py · ADR-030", adr:["ADR-030"], star:true},
@@ -132,16 +132,16 @@ export const PIPELINES = {
       {n:6, t:"1.5s",  title:"buildPalmPrompt — 옥선 할미 페르소나", desc:"4대선 점수 + 금성대 + 컨텍스트 → 한국 사극 노녀 어조 프롬프트.", meta:"front prompt builder"},
       {n:7, t:"2~12s", title:"Gemini Flash Lite 자연어 풀이", desc:"옥선 할미 어조 + 결정론 점수 인용 + 운명 단정 회피.", meta:"/api/llm/chat", star:true},
       {n:8, t:"12s",   title:"렌더링 — 4대선 SVG 오버레이 + 본문", desc:"손바닥 사진에 4대선 곡선 시각화 + 점수 차트 + 옥선 할미 본문.", ok:true},
-    ],
-    foot: "손금은 결정론 4대선 점수 + LLM 자연어. 의학 진단 X, ADR-006 자문 거절 정신."
+      ],
+      foot: "손금은 결정론 4대선 점수 + LLM 자연어. 의학 진단 X, ADR-006 자문 거절 정신.",
     },
   },
   name: {
     classic: {
-    title: "묵향 선생 이름 풀이 파이프라인",
-    hint: "/api/name/reading · 대법원 9389 한자 + 음운·자원오행 결정론",
-    tagClass: "name",
-    steps: [
+      title: "묵향 선생 이름 풀이 파이프라인",
+      hint: "/api/name/reading · 대법원 9389 한자 + 음운·자원오행 결정론",
+      tagClass: "name",
+      steps: [
       {n:1, t:"0s",    title:"사용자 이름 입력 (한글)", desc:"성·이름 자동 분리 (통계청 KOSIS 300위 + γ 보정 ADR-033).", meta:"name_uniqueness", adr:["ADR-029","ADR-033"]},
       {n:2, t:"0.1s",  title:"한자 후보 추출 (대법원 인명용 9389자)", desc:"한글 음 → 한자 후보 다중 (ADR-026 scourt API 9932자 확장 풀).", meta:"name_unihan · ADR-026", adr:["ADR-026"]},
       {n:3, t:"0.2s",  title:"5중 결정론 분석", desc:"① 두음법칙(name_dueum) ② 발음오행(name_baleum) ③ 자원오행(name_saju_ohaeng ADR-027) ④ 81수리(name_strokes) ⑤ 음양배합(name_eumyang).", meta:"5217줄 16 모듈", adr:["ADR-027","ADR-028"], star:true},
@@ -151,16 +151,16 @@ export const PIPELINES = {
       {n:7, t:"0.6s",  title:"buildNamePrompt — 묵향 선생 페르소나", desc:"한자 + 5중 점수 + 음운 결합 → 한국 사극 학자 어조 프롬프트.", meta:"front prompt builder"},
       {n:8, t:"1~10s", title:"Gemini Flash Lite 자연어 풀이", desc:"묵향 선생 어조 + 5중 분석 인용 + 작명 권고 (선택).", meta:"/api/llm/chat", star:true},
       {n:9, t:"10s",   title:"렌더링 — 한자 카드 + 5중 점수 + 본문", desc:"성·이름 한자 + 발음·자원 오행 게이지 + 81수리 + 묵향 선생 본문.", ok:true},
-    ],
-    foot: "본 시스템 가장 풍부한 결정론 도메인 — 5217줄 16 모듈 + 10 ADR (001·003·010·016·026·027·028·029·032·033)."
+      ],
+      foot: "본 시스템 가장 풍부한 결정론 도메인 — 5217줄 16 모듈 + 10 ADR (001·003·010·016·026·027·028·029·032·033).",
     },
   },
   star: {
     classic: {
-    title: "성하 공자 별빛 풀이 파이프라인",
-    hint: "/api/star/reading · 서양 점성술 + 행성·궁·각도",
-    tagClass: "star",
-    steps: [
+      title: "성하 공자 별빛 풀이 파이프라인",
+      hint: "/api/star/reading · 서양 점성술 + 행성·궁·각도",
+      tagClass: "star",
+      steps: [
       {n:1, t:"0s",    title:"사용자 생년월일시 + 출생지 좌표", desc:"위경도 → 황도좌표계 변환. 사주와 같은 입력 재활용 가능.", meta:"front 입력 통일"},
       {n:2, t:"0.1s",  title:"행성 위치 계산 (10행성)", desc:"태양·달·수성·금성·화성·목성·토성·천왕성·해왕성·명왕성 황경. NASA JPL 또는 Swiss Ephemeris.", meta:"결정론 천문 계산", star:true},
       {n:3, t:"0.2s",  title:"하우스 시스템 (Placidus/Whole Sign)", desc:"12 하우스 + ASC/MC + IC/DSC. 사용자 좌표 의존.", meta:"하우스 분할"},
@@ -169,8 +169,8 @@ export const PIPELINES = {
       {n:6, t:"0.5s",  title:"buildStarPrompt — 성하 공자 페르소나", desc:"행성·궁·각도 dict → 서양 점성술 학파 통설 인용 (마음·관계·직업).", meta:"front prompt builder"},
       {n:7, t:"1~10s", title:"Gemini Flash Lite 자연어 풀이", desc:"성하 공자 (별빛) 어조 + 행성·각도 인용 + 단정 회피.", meta:"/api/llm/chat", star:true},
       {n:8, t:"10s",   title:"렌더링 — 출생 차트 SVG + 본문", desc:"천체 차트 (행성 + 하우스 + 각도) 시각화 + 성하 공자 본문.", ok:true},
-    ],
-    foot: "⚠ 백엔드 미구현 (설계만) — web/server.py에 /api/star/reading 라우트 없음. 본 파이프라인은 7인 점술가 후속 확장 계획. 다른 8개 도메인은 실제 라우트 가동 중."
+      ],
+      foot: "⚠ 백엔드 미구현 (설계만) — web/server.py에 /api/star/reading 라우트 없음. 본 파이프라인은 7인 점술가 후속 확장 계획. 다른 8개 도메인은 실제 라우트 가동 중.",
     },
-  }
+  },
 };
