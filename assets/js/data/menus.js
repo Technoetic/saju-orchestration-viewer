@@ -66,7 +66,19 @@ export const MENUS = {
       { key:'saju-star',     name:'사주 + 별빛 통합 분석', glyph:'日 月', tier:'premium', badges:['hot'],         est:'20분',    desc:'만월 아씨 + 성하 공자 합작 — 동서양 융합 풀이의 강력한 차별화.' },
     ]
   },
-  face:       { master: '운학 도사', masterSub: 'Opus Vision + 결정론 관상', items: [] },
+  face: {
+    master: '운학 도사',
+    masterSub: '구름과 학을 벗삼은 산중 노도사 · 얼굴(관상) 풀이',
+    items: [
+      { key:'today-impression', name:'오늘의 인상',     glyph:'今 印', tier:'free',    badges:[],      est:'5분',     desc:'오늘 만날 사람과의 첫인상 궁합을 가볍게 짚어드리네. 사진 없이 텍스트만으로.' },
+      { key:'classic',          name:'정통 관상',       glyph:'觀 相', tier:'free',    badges:[],      est:'30~60초', desc:'Opus 4.7 Vision + 결정론 12궁·삼정·오관 — 얼굴 사진을 한 번 풀어드리네.' },
+      { key:'part-face',        name:'부위별 관상',     glyph:'部 位', tier:'free',    badges:[],      est:'5분',     desc:'이마·눈·코·입·귀·턱 등 각 부위 의미 — 짧고 재미있는 단독 풀이.' },
+      { key:'past-life',        name:'나의 전생',       glyph:'前 生', tier:'premium', badges:['hot'], est:'10분',    desc:'관상으로 보는 그대의 전생. 재미와 신비가 함께 있는 풀이.' },
+      { key:'future-face',      name:'미래의 얼굴',     glyph:'未 顏', tier:'premium', badges:['new'], est:'15~20분', desc:'10년 후·20년 후 얼굴 — 미래 운세를 시각화. AI 이미지 생성 결합.' },
+      { key:'direction',        name:'방위 운세',       glyph:'方 位', tier:'premium', badges:[],      est:'10분',    desc:'올해 길한 방위·이사 방위·책상/침대 위치를 짚어드리네.' },
+      { key:'feng-shui',        name:'풍수 인테리어',   glyph:'風 水', tier:'premium', badges:['new'], est:'15분',    desc:'방 배치·색상 추천·길한 물건 — 공간이 운을 만드는 인테리어.' },
+    ]
+  },
   palm:       { master: '옥선 할미', masterSub: '4대선 + 금성대',           items: [] },
   name:       { master: '묵향 선생', masterSub: '대법원 9389 한자 작명',    items: [] },
   mbti:       { master: 'MBTI 프로필러', masterSub: '4학파 룩업 (viewer 전용)', items: [] },
