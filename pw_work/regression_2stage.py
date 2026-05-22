@@ -17,7 +17,8 @@ from playwright.sync_api import sync_playwright, TimeoutError as PWTimeout
 HERE = Path(__file__).parent
 BASE_URL = os.environ.get('BASE_URL', 'http://localhost:9876/')
 NODES = ['saju', 'mbti', 'dream', 'divination', 'clinical', 'face', 'palm', 'name', 'star']
-VIEWPORT = {'width': 1400, 'height': 1800}
+VIEWPORT_W = 1400
+VIEWPORT_H = 1800
 MODAL_OPEN_TIMEOUT_MS = 3000
 MODAL_SETTLE_MS = 400
 CLOSE_SETTLE_MS = 200
@@ -32,7 +33,7 @@ def main():
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
-        page = browser.new_page(viewport=VIEWPORT)
+        page = browser.new_page(viewport={'width': VIEWPORT_W, 'height': VIEWPORT_H})
 
         try:
             page.goto(BASE_URL, wait_until='domcontentloaded', timeout=8000)
