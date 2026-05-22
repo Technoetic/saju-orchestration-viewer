@@ -21,7 +21,19 @@ export const MENUS = {
       { key:'lifetime', name:'평생 운세 보감',   glyph:'一 生', tier:'premium', badges:['hot'],est:'15~20분', desc:'평생 대운 흐름(10년 단위)·인생 그래프·황금기/시련기를 종합 풀이서로 드립니다.' },
     ]
   },
-  dream:      { master: '몽이 도령', masterSub: '꿈해몽 + HvDC 멀티에이전트', items: [] },
+  dream: {
+    master: '몽이 도령',
+    masterSub: '호접몽을 거니는 꿈의 길잡이 · 꿈 풀이',
+    items: [
+      { key:'today',     name:'오늘의 꿈해몽',  glyph:'夢 占', tier:'free',    badges:['hot'], est:'5분',         desc:'어젯밤 꾸신 꿈을 가볍게 풀어드립니다. 한 줄만 적어주셔도 좋아요.' },
+      { key:'dict',      name:'꿈 사전',         glyph:'夢 典', tier:'free',    badges:[],      est:'몇 분',       desc:'동양 전통 꿈 사전. 등장한 사물·동물·장소로 검색하실 수 있습니다.' },
+      { key:'classic',   name:'정통 꿈 풀이',    glyph:'夢 解', tier:'premium', badges:[],      est:'30~60초',     desc:'14 AI 에이전트·30 도메인 분석으로 꿈의 깊은 의미를 펼쳐드립니다.' },
+      { key:'recurring', name:'반복되는 꿈',     glyph:'輪 廻', tier:'premium', badges:['new'], est:'5~10분',      desc:'자주 꾸는 꿈의 의미·무의식 패턴을 깊이 분석해드립니다.' },
+      { key:'baby',      name:'태몽 풀이',       glyph:'胎 夢', tier:'premium', badges:[],      est:'5~10분',      desc:'임산부 대상 — 태몽의 의미·아이의 미래를 풀어드립니다.' },
+      { key:'nightmare', name:'악몽 분석',       glyph:'惡 夢', tier:'premium', badges:[],      est:'10~15분',     desc:'IRT 악몽 워크플로 — 악몽의 의미 풀이와 심리적 해소법을 안내합니다.' },
+      { key:'lucid',     name:'자각몽 가이드',   glyph:'覺 夢', tier:'premium', badges:['new'], est:'7일 프로그램', desc:'Dormio TDI 활용 — 자각몽 입문 7일 가이드 프로그램입니다.' },
+    ]
+  },
   divination: { master: '화선 낭자', masterSub: '꽃패·타로·주역',           items: [] },
   star:       { master: '성하 공자', masterSub: '서양 점성술 + 동양 28수',   items: [] },
   face:       { master: '운학 도사', masterSub: 'Opus Vision + 결정론 관상', items: [] },
