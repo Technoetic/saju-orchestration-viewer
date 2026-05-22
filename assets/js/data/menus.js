@@ -34,7 +34,24 @@ export const MENUS = {
       { key:'lucid',     name:'자각몽 가이드',   glyph:'覺 夢', tier:'premium', badges:['new'], est:'7일 프로그램', desc:'Dormio TDI 활용 — 자각몽 입문 7일 가이드 프로그램입니다.' },
     ]
   },
-  divination: { master: '화선 낭자', masterSub: '꽃패·타로·주역',           items: [] },
+  divination: {
+    master: '화선 낭자',
+    masterSub: '꽃패 12 풀이 (한국 정통 화투 학파) · 본 시스템 타로·주역 모듈 부재 — 화패 단일',
+    items: [
+      { key:'today',             name:'오늘의 꽃패',           glyph:'今 牌', tier:'free',    badges:['hot'], est:'5분',     desc:'매일 카드 한 장 — 오늘의 메시지를 꽃패로 풀어드려요.' },
+      { key:'heart',             name:'그 사람의 속마음',      glyph:'心 情', tier:'premium', badges:['hot'], est:'5~10분',  desc:'"그 사람은 지금 무슨 생각일까?" — 마음 깊은 곳을 꽃패가 비춰드려요.' },
+      { key:'who-likes',         name:'지금 나를 좋아하는 사람', glyph:'戀 慕', tier:'premium', badges:['hot'], est:'5~10분',  desc:'"나를 마음에 둔 사람은 누굴까?" — 짝사랑·썸 시장의 인기 풀이예요.' },
+      { key:'reunion-month',     name:'이달의 재회 확률',      glyph:'再 緣', tier:'premium', badges:[],      est:'5~10분',  desc:'헤어진 연인과 이번 달 재회할 가능성을 꽃패로 짚어드려요.' },
+      { key:'reunion-today',     name:'오늘의 재회 확률',      glyph:'今 緣', tier:'premium', badges:[],      est:'5분',     desc:'매일 갱신되는 재회 가능성. 오늘만의 흐름을 짚어드려요.' },
+      { key:'breakup-thinking',  name:'이별이 고민될 때',      glyph:'別 心', tier:'premium', badges:[],      est:'10~15분', desc:'"정말 우리는 여기까지인 걸까?" — 위기 상황의 마음을 꽃패가 비춰드려요.' },
+      { key:'image',             name:'사람들이 보는 내 이미지', glyph:'影 像', tier:'premium', badges:[],      est:'5~10분',  desc:'"나는 어떤 사람으로 보여질까?" — 자기이해와 인간관계의 거울이에요.' },
+      { key:'classic',           name:'정통 꽃패 풀이',        glyph:'花 牌', tier:'free',    badges:[],      est:'5~10분',  desc:'78장 정통 화패 — 4가지 스프레드 (1장/3장/5장/10장).' },
+      { key:'fate-one',          name:'운명의 한 장',          glyph:'運 一', tier:'premium', badges:[],      est:'10~15분', desc:'평생 운명을 가리키는 단 한 장의 카드. 가장 깊은 풀이.' },
+      { key:'decision',          name:'결정의 갈림길',         glyph:'決 路', tier:'premium', badges:['new'], est:'10분',    desc:'"이 선택, 해도 될까?" — 진로·이직·이사 등 큰 결정 앞에서의 답.' },
+      { key:'future-fate',       name:'미래의 인연',           glyph:'未 緣', tier:'premium', badges:['hot'], est:'10~15분', desc:'곧 만날 사람 — 외모·성격·만나는 시기·장소를 꽃패가 비춰드려요.' },
+      { key:'life-card',         name:'인생 카드',             glyph:'一 生', tier:'premium', badges:['hot'], est:'15~20분', desc:'인생 전체를 보는 10장 스프레드. 과거-현재-미래를 종합한 평생 풀이서.' },
+    ]
+  },
   star:       { master: '성하 공자', masterSub: '서양 점성술 + 동양 28수',   items: [] },
   face:       { master: '운학 도사', masterSub: 'Opus Vision + 결정론 관상', items: [] },
   palm:       { master: '옥선 할미', masterSub: '4대선 + 금성대',           items: [] },
