@@ -1,6 +1,7 @@
 import { PIPELINES } from "../data/pipelines.js";
+import { MENUS } from "../data/menus.js";
 import { PIPELINE_TONES, DEFAULT_TONE } from "../config.js";
-import { escSvg, wrapSvgText } from "../utils.js";
+import { escSvg, escapeHtml, wrapSvgText } from "../utils.js";
 
 const LAYOUT = {
   STEP_BASE_H: 90,
@@ -18,6 +19,8 @@ export class PipelineModal {
     this.body = document.getElementById("pipe-modal-body");
     this.boundOnKeydown = (e) => { if (e.key === "Escape") this.close(); };
     this.boundOnBgClick = (e) => { if (e.target === this.bg) this.close(); };
+    this.state = { mode: 'menu', nodeKey: null, optionKey: null };
+    this.boundOnBackClick = () => this._goBackToMenu();
   }
 
   init() {
@@ -31,33 +34,125 @@ export class PipelineModal {
     this.bg.addEventListener("click", this.boundOnBgClick);
   }
 
-  open(key) {
-    const data = PIPELINES[key];
-    if (!data) return;
-    const tone = PIPELINE_TONES[key] || DEFAULT_TONE;
+  open(nodeKey) {
+    this.state = { mode: 'menu', nodeKey, optionKey: null };
+    this._renderMenu(nodeKey);
+    this.bg.classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+
+  _renderMenu(nodeKey) {
+    const menu = MENUS[nodeKey];
+    const tone = PIPELINE_TONES[nodeKey] || DEFAULT_TONE;
+    if (!menu) {
+      this.body.innerHTML = `<p style="color:#ff7a7a">MENUS["${escapeHtml(nodeKey)}"] 미정의</p>`;
+      return;
+    }
+    const tagClass = nodeKey;
+    const cards = (menu.items || []).map(item => this._renderMenuCard(item)).join('');
+    const empty = (menu.items || []).length === 0
+      ? `<div style="grid-column:1/-1;text-align:center;color:#9b8c63;padding:40px 0">옵션 메뉴 준비 중</div>` : '';
+
+    this.body.innerHTML = `
+      <button class="pipe-modal-close" id="pipe-modal-close" aria-label="close">×</button>
+      <div class="pipe-modal-head">
+        <span class="pipe-modal-tag ${tagClass}">${escapeHtml(nodeKey.toUpperCase())}</span>
+        <h3>${escapeHtml(menu.master)}</h3>
+        <span class="pipe-modal-hint">${escapeHtml(menu.masterSub || '')}</span>
+      </div>
+      <div class="pipe-menu-grid" style="--pipe-tone:${tone.main}">
+        ${cards}
+        ${empty}
+      </div>
+      <div class="pipe-modal-foot">카드 클릭 → 옵션 전용 파이프라인 SVG · ESC 닫기</div>
+    `;
+    document.getElementById("pipe-modal-close").addEventListener("click", () => this.close());
+    this.body.querySelectorAll('.pipe-menu-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const optionKey = card.getAttribute('data-option');
+        this._goToPipeline(nodeKey, optionKey);
+      });
+    });
+  }
+
+  _renderMenuCard(item) {
+    const badges = [];
+    if (item.tier === 'free')    badges.push(`<span class="badge badge-free">무료</span>`);
+    if (item.tier === 'premium') badges.push(`<span class="badge badge-premium">프리미엄</span>`);
+    if (item.tier === 'season')  badges.push(`<span class="badge badge-season">시즌</span>`);
+    (item.badges || []).forEach(b => {
+      if (b === 'hot') badges.push(`<span class="badge badge-hot">인기</span>`);
+      if (b === 'new') badges.push(`<span class="badge badge-new">NEW</span>`);
+      if (b === 'viewer-only') badges.push(`<span class="badge badge-viewer">viewer</span>`);
+    });
+    const tierIcon = item.tier === 'premium' ? '💎' : item.tier === 'season' ? '🌸' : '☆';
+    return `
+      <button class="pipe-menu-card" type="button" data-option="${escSvg(item.key)}">
+        <div class="pipe-menu-card-badges">${badges.join('')}</div>
+        <div class="pipe-menu-card-glyph">${escapeHtml(item.glyph || '')}</div>
+        <div class="pipe-menu-card-name">${escapeHtml(item.name)}</div>
+        <p class="pipe-menu-card-desc">${escapeHtml(item.desc || '')}</p>
+        <div class="pipe-menu-card-meta">
+          <span>⏱ ${escapeHtml(item.est || '몇 분')}</span>
+          <span>${tierIcon}</span>
+        </div>
+      </button>
+    `;
+  }
+
+  _goToPipeline(nodeKey, optionKey) {
+    this.state = { mode: 'pipeline', nodeKey, optionKey };
+    this._renderPipeline(nodeKey, optionKey);
+  }
+
+  _goBackToMenu() {
+    if (!this.state.nodeKey) return;
+    this.state.mode = 'menu';
+    this.state.optionKey = null;
+    this._renderMenu(this.state.nodeKey);
+  }
+
+  _renderPipeline(nodeKey, optionKey) {
+    const nodeBucket = PIPELINES[nodeKey];
+    const data = nodeBucket && nodeBucket[optionKey];
+    const tone = PIPELINE_TONES[nodeKey] || DEFAULT_TONE;
+    if (!data) {
+      this.body.innerHTML = `
+        <button class="pipe-modal-close" id="pipe-modal-close" aria-label="close">×</button>
+        <button class="pipe-modal-back" id="pipe-modal-back">← 메뉴로</button>
+        <div class="pipe-modal-head">
+          <span class="pipe-modal-tag ${nodeKey}">${escapeHtml(nodeKey.toUpperCase())}</span>
+          <h3>${escapeHtml(optionKey)} (파이프라인 준비 중)</h3>
+        </div>
+        <p style="padding:40px 0;text-align:center;color:#9b8c63">PIPELINES["${escapeHtml(nodeKey)}"]["${escapeHtml(optionKey)}"] 미정의</p>
+      `;
+      document.getElementById("pipe-modal-close").addEventListener("click", () => this.close());
+      document.getElementById("pipe-modal-back").addEventListener("click", this.boundOnBackClick);
+      return;
+    }
 
     const { stepGroups, totalH } = this._renderSteps(data, tone);
     const svg = this._renderSvg(stepGroups, totalH);
 
     this.body.innerHTML = `
       <button class="pipe-modal-close" id="pipe-modal-close" aria-label="close">×</button>
+      <button class="pipe-modal-back" id="pipe-modal-back">← 메뉴로</button>
       <div class="pipe-modal-head">
-        <span class="pipe-modal-tag ${data.tagClass}">${key.toUpperCase()}</span>
-        <h3>${data.title}</h3>
-        <span class="pipe-modal-hint">${data.hint}</span>
+        <span class="pipe-modal-tag ${data.tagClass || nodeKey}">${escapeHtml(nodeKey.toUpperCase())}</span>
+        <h3>${escapeHtml(data.title)}</h3>
+        <span class="pipe-modal-hint">${escapeHtml(data.hint || '')}</span>
       </div>
       <div class="pipe-svg-wrap">${svg}</div>
-      <div class="pipe-modal-foot">${data.foot}</div>
+      <div class="pipe-modal-foot">${escapeHtml(data.foot || '')}</div>
     `;
-    this.bg.classList.add("open");
-    document.body.style.overflow = "hidden";
-
     document.getElementById("pipe-modal-close").addEventListener("click", () => this.close());
+    document.getElementById("pipe-modal-back").addEventListener("click", this.boundOnBackClick);
   }
 
   close() {
     this.bg.classList.remove("open");
     document.body.style.overflow = "";
+    this.state = { mode: 'menu', nodeKey: null, optionKey: null };
   }
 
   _renderSteps(data, tone) {
