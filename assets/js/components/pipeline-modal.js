@@ -49,7 +49,7 @@ export class PipelineModal {
       return;
     }
     const tagClass = nodeKey;
-    const cards = (menu.items || []).map(item => this._renderMenuCard(item, tone)).join('');
+    const cards = (menu.items || []).map(item => this._renderMenuCard(item)).join('');
     const empty = (menu.items || []).length === 0
       ? `<div style="grid-column:1/-1;text-align:center;color:#9b8c63;padding:40px 0">옵션 메뉴 준비 중</div>` : '';
 
@@ -75,7 +75,7 @@ export class PipelineModal {
     });
   }
 
-  _renderMenuCard(item, tone) {
+  _renderMenuCard(item) {
     const badges = [];
     if (item.tier === 'free')    badges.push(`<span class="badge badge-free">무료</span>`);
     if (item.tier === 'premium') badges.push(`<span class="badge badge-premium">프리미엄</span>`);
