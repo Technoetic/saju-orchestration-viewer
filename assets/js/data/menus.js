@@ -102,6 +102,15 @@ export const MENUS = {
       { key:'saju-name',   name:'사주 + 이름 종합 분석', glyph:'合 命', tier:'premium', badges:['hot'], est:'15~20분', desc:'만월 아씨 + 묵향 선생 합작 — 사주와 이름이 잘 맞는지 종합 분석.' },
     ]
   },
-  mbti:       { master: 'MBTI 프로필러', masterSub: '4학파 룩업 (viewer 전용)', items: [] },
+  mbti: {
+    master: 'MBTI 프로필러',
+    masterSub: '4학파 룩업 (LLM 0회 · viewer 전용)',
+    items: [
+      { key:'jung',      name:'Jung 8 인지기능', glyph:'認 知', tier:'free', badges:['viewer-only'], est:'<1초', desc:'Ni·Ne·Si·Se·Ti·Te·Fi·Fe 8축 위계 결정론 룩업.' },
+      { key:'keirsey',   name:'Keirsey 4 기질',  glyph:'四 氣', tier:'free', badges:['viewer-only'], est:'<1초', desc:'Guardian·Artisan·Idealist·Rational 4 기질 매핑.' },
+      { key:'socionics', name:'Socionics 16유형', glyph:'十 六', tier:'free', badges:['viewer-only'], est:'<1초', desc:'러시아 학파 16×16 정보교환 매트릭스.' },
+      { key:'myers',     name:'Myers-Briggs 16', glyph:'M B',  tier:'free', badges:['viewer-only'], est:'<1초', desc:'INTJ~ESFP 표준 16유형 + 사주-MBTI 융합(ADR-014).' },
+    ]
+  },
   clinical:   { master: '임상 스크리닝', masterSub: '8 표준 척도 (viewer 전용)', items: [] },
 };
