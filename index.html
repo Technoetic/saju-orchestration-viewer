@@ -143,15 +143,6 @@
             <text x="565" y="403" font-size="14" fill="#d4a857" text-anchor="end" font-family="JetBrains Mono,monospace">⊕</text>
           </g>
 
-          <!-- 성하 공자 — 별빛 (ADR-068 본문화 완료) -->
-          <g class="pipe-node" data-pipeline="star" style="cursor:pointer">
-            <rect x="320" y="451" width="260" height="56" rx="10" fill="#211f3a" stroke="#c4b5fd"/>
-            <text x="340" y="472" font-size="13" fill="#c4b5fd" font-weight="700">성하 공자 · 별빛 풀이</text>
-            <text x="340" y="489" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">/api/star/reading</text>
-            <text x="340" y="502" font-size="10" fill="#5f5638" font-family="JetBrains Mono,monospace">12 황도대 · 4 element · 3 modality · 7 tone</text>
-            <text x="565" y="469" font-size="14" fill="#c4b5fd" text-anchor="end" font-family="JetBrains Mono,monospace">⊕</text>
-          </g>
-
           <!-- MBTI -->
           <g class="pipe-node" data-pipeline="mbti" style="cursor:pointer">
             <rect x="320" y="517" width="260" height="40" rx="10" fill="#241319" stroke="#ff7d6b"/>
@@ -220,8 +211,8 @@
 
         <!-- EDGES : input -> engines (실 코드 매핑 정합)
              INPUT y 중심: 1=85(생년) · 2=165(MBTI) · 3=245(꿈) · 4=325(점복) · 5=405(얼굴)
-             DOMAIN y 중심: 사주=83 · 관상=149 · 이름=281 · 꿈=347 · 점복=413 · 별빛=479 · MBTI보조=537 · 임상=605
-             (palm 도메인 제거 — 노드·입력·간선·범례 모두 삭제)
+             DOMAIN y 중심: 사주=83 · 관상=149 · 이름=281 · 꿈=347 · 점복=413 · MBTI보조=537 · 임상=605
+             (palm·star 도메인 제거 — 노드·입력·간선·범례 모두 삭제)
         -->
         <g fill="none" stroke="#6e5a26" stroke-width="1.5" marker-end="url(#arr)">
           <!-- 생년월일시·성별 (y=85) → 사주(83) + 이름(281) -->
@@ -232,9 +223,8 @@
           <path class="edge" d="M240 165  C 280 165,280 537,320 537"/>
           <!-- 꿈 텍스트 (y=245) → 몽이 도령 꿈 해석(347) -->
           <path class="edge" d="M240 245  C 280 245,280 347,320 347"/>
-          <!-- 타로/화패/주역 + question (y=325) → 화선 점복(413) + 별빛(479) -->
+          <!-- 타로/화패/주역 + question (y=325) → 화선 점복(413) -->
           <path class="edge" d="M240 325  C 280 325,280 413,320 413"/>
-          <path class="edge" d="M240 325  C 280 325,280 479,320 479"/>
           <!-- 얼굴 사진 (y=405) → 운학 도사 관상(149) -->
           <path stroke="#ff9eb5" class="edge" d="M240 405  C 280 405,280 149,320 149"/>
           <!-- 임상은 사용자 별도 자가검사 선택 (INPUT 직결 X — 별도 선택 단계) -->
@@ -247,7 +237,6 @@
           <path class="edge" id="e-name"     d="M580 281 C 630 281, 630 325, 680 325"/>
           <path class="edge" id="e-dream"    d="M580 347 C 630 347, 630 350, 680 350"/>
           <path class="edge" id="e-div"      d="M580 413 C 630 413, 630 375, 680 375"/>
-          <path class="edge" id="e-star"     d="M580 479 C 630 479, 630 400, 680 400"/>
           <path class="edge" id="e-mbti"     d="M580 537 C 630 537, 630 425, 680 425"/>
           <path class="edge" id="e-clinical" d="M580 585 C 630 585, 630 445, 680 445"/>
         </g>
@@ -276,7 +265,6 @@
         <span><i style="background:#a78bfa"></i>묵향 선생 · 이름</span>
         <span><i style="background:#6fb8ff"></i>몽이 도령 · 꿈</span>
         <span><i style="background:#d4a857"></i>화선 낭자 · 점복</span>
-        <span style="opacity:0.65"><i style="background:#c4b5fd"></i>성하 공자 · 별빛 <span style="color:#ff7a7a">(미구현)</span></span>
         <span><i style="background:#ff7d6b"></i>MBTI 보조</span>
         <span><i style="background:#d0d0d0"></i>임상 안전망</span>
         <span><i style="background:#f4d35e"></i>LLM Fusion Path</span>
