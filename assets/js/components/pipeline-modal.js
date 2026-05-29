@@ -216,11 +216,14 @@ export class PipelineModal {
       const hasMeta  = !!s.meta;
       const hasPrompt = !!(s.promptKey && SYSTEM_PROMPTS[s.promptKey]);
       const lines    = Math.ceil((s.desc || "").length / 75);
-      const h = LAYOUT.STEP_BASE_H
-        + Math.max(0, (lines - 1) * 18)
-        + (hasMeta ? 18 : 0)
-        + (adrCount ? 18 : 0)
-        + (hasPrompt ? 32 : 0);
+      // 띠 yOff = 이전 컨텐츠(desc + meta + adr) 하단 + 8px 여백
+      const promptBarY = 94 + lines * 18 + (hasMeta ? 18 : 0) + (adrCount ? 22 : 0) + 6;
+      const h = hasPrompt
+        ? promptBarY + 22 + 10  // 띠 22 + 띠 아래 10px 안전 여백
+        : LAYOUT.STEP_BASE_H
+          + Math.max(0, (lines - 1) * 18)
+          + (hasMeta ? 18 : 0)
+          + (adrCount ? 18 : 0);
 
       const { boxStroke, boxFill, dashAttr, numFill, titleFill } = this._stepStyle(s, tone);
 
@@ -230,7 +233,7 @@ export class PipelineModal {
 
       const adrChips = this._renderAdrChips(s.adr, lines, hasMeta);
       const desc     = wrapSvgText(s.desc || "", 75, 20, 75, 18, "12", "#9b8c63");
-      const promptBar = this._renderPromptBar(s, lines, hasMeta, adrCount);
+      const promptBar = this._renderPromptBar(s, promptBarY);
 
       const grp = `
         <g transform="translate(${LAYOUT.BOX_X}, ${cursorY})">
@@ -293,10 +296,10 @@ export class PipelineModal {
     return `<g transform="translate(0, ${yOff})">${chips}</g>`;
   }
 
-  _renderPromptBar(s, lines, hasMeta, adrCount) {
+  _renderPromptBar(s, yOff) {
     if (!s.promptKey || !SYSTEM_PROMPTS[s.promptKey]) return "";
     const promptDef = SYSTEM_PROMPTS[s.promptKey];
-    const yOff = 90 + lines * 18 + (hasMeta ? 18 : 0) + (adrCount ? 22 : 0);
+    // yOff는 호출자가 직접 계산해 넘긴다 (이전 컨텐츠 bottom + 여백)
     const barW = LAYOUT.BOX_W - 40;
     const label = `📜 ${promptDef.character} 시스템 프롬프트 전문 보기`;
     return `<g class="prompt-bar" transform="translate(20, ${yOff})" data-prompt-key="${escSvg(s.promptKey)}" style="cursor:pointer">
