@@ -1,5 +1,6 @@
 import { PIPELINES } from "../data/pipelines.js";
 import { MENUS } from "../data/menus.js";
+import { SYSTEM_PROMPTS } from "../data/prompts.js";
 import { PIPELINE_TONES, DEFAULT_TONE } from "../config.js";
 import { escSvg, escapeHtml, wrapSvgText } from "../utils.js";
 
@@ -147,6 +148,59 @@ export class PipelineModal {
     `;
     document.getElementById("pipe-modal-close").addEventListener("click", () => this.close());
     document.getElementById("pipe-modal-back").addEventListener("click", this.boundOnBackClick);
+
+    // 프롬프트 바 클릭 → 자식 모달 (이벤트 위임)
+    this.body.querySelectorAll('g.prompt-bar').forEach((g) => {
+      g.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const promptKey = g.getAttribute('data-prompt-key');
+        if (promptKey) this._openPromptModal(promptKey);
+      });
+    });
+  }
+
+  _openPromptModal(promptKey) {
+    const def = SYSTEM_PROMPTS[promptKey];
+    if (!def) return;
+
+    // 신규 자식 모달 DOM 생성 (z-index 부모 위로)
+    let host = document.getElementById('prompt-modal-bg');
+    if (!host) {
+      host = document.createElement('div');
+      host.id = 'prompt-modal-bg';
+      host.className = 'prompt-modal-bg';
+      host.innerHTML = `<div class="prompt-modal" role="dialog" aria-modal="true">
+        <button class="prompt-modal-close" aria-label="close">×</button>
+        <div class="prompt-modal-body"></div>
+      </div>`;
+      document.body.appendChild(host);
+      host.addEventListener('click', (e) => { if (e.target === host) this._closePromptModal(); });
+      host.querySelector('.prompt-modal-close').addEventListener('click', () => this._closePromptModal());
+    }
+
+    const body = host.querySelector('.prompt-modal-body');
+    body.innerHTML = `
+      <div class="prompt-modal-head">
+        <span class="prompt-modal-tag">${escapeHtml(promptKey.toUpperCase())}</span>
+        <h3>${escapeHtml(def.character)} · 실제 시스템 프롬프트 전문</h3>
+        <span class="prompt-modal-source">출처: <code>${escapeHtml(def.source)}</code></span>
+      </div>
+      <pre class="prompt-modal-pre">${escapeHtml(def.full)}</pre>
+      <div class="prompt-modal-foot">이 텍스트가 매 호출마다 LLM에게 그대로 전달됩니다 — 페르소나·금지 규칙·작성 형식이 모두 시스템 프롬프트에 하드코딩되어 있습니다.</div>
+    `;
+
+    host.classList.add('open');
+    this._promptModalKeydown = (e) => { if (e.key === 'Escape') this._closePromptModal(); };
+    document.addEventListener('keydown', this._promptModalKeydown);
+  }
+
+  _closePromptModal() {
+    const host = document.getElementById('prompt-modal-bg');
+    if (host) host.classList.remove('open');
+    if (this._promptModalKeydown) {
+      document.removeEventListener('keydown', this._promptModalKeydown);
+      this._promptModalKeydown = null;
+    }
   }
 
   close() {
@@ -160,8 +214,13 @@ export class PipelineModal {
     const groups = data.steps.map((s) => {
       const adrCount = (s.adr || []).length;
       const hasMeta  = !!s.meta;
+      const hasPrompt = !!(s.promptKey && SYSTEM_PROMPTS[s.promptKey]);
       const lines    = Math.ceil((s.desc || "").length / 75);
-      const h = LAYOUT.STEP_BASE_H + Math.max(0, (lines - 1) * 18) + (hasMeta ? 18 : 0) + (adrCount ? 18 : 0);
+      const h = LAYOUT.STEP_BASE_H
+        + Math.max(0, (lines - 1) * 18)
+        + (hasMeta ? 18 : 0)
+        + (adrCount ? 18 : 0)
+        + (hasPrompt ? 32 : 0);
 
       const { boxStroke, boxFill, dashAttr, numFill, titleFill } = this._stepStyle(s, tone);
 
@@ -171,6 +230,7 @@ export class PipelineModal {
 
       const adrChips = this._renderAdrChips(s.adr, lines, hasMeta);
       const desc     = wrapSvgText(s.desc || "", 75, 20, 75, 18, "12", "#9b8c63");
+      const promptBar = this._renderPromptBar(s, lines, hasMeta, adrCount);
 
       const grp = `
         <g transform="translate(${LAYOUT.BOX_X}, ${cursorY})">
@@ -180,6 +240,7 @@ export class PipelineModal {
           ${desc}
           ${metaTxt}
           ${adrChips}
+          ${promptBar}
         </g>
         <g transform="translate(${LAYOUT.NUM_X}, ${cursorY + h / 2})">
           <circle r="20" fill="${numFill}" stroke="#d4af37" stroke-width="2"/>
@@ -230,6 +291,19 @@ export class PipelineModal {
       return chip;
     }).join("");
     return `<g transform="translate(0, ${yOff})">${chips}</g>`;
+  }
+
+  _renderPromptBar(s, lines, hasMeta, adrCount) {
+    if (!s.promptKey || !SYSTEM_PROMPTS[s.promptKey]) return "";
+    const promptDef = SYSTEM_PROMPTS[s.promptKey];
+    const yOff = 90 + lines * 18 + (hasMeta ? 18 : 0) + (adrCount ? 22 : 0);
+    const barW = LAYOUT.BOX_W - 40;
+    const label = `📜 ${promptDef.character} 시스템 프롬프트 전문 보기`;
+    return `<g class="prompt-bar" transform="translate(20, ${yOff})" data-prompt-key="${escSvg(s.promptKey)}" style="cursor:pointer">
+      <rect width="${barW}" height="22" rx="11" fill="rgba(244,211,94,0.14)" stroke="var(--gold-bri)" stroke-width="1"/>
+      <text x="14" y="15" font-size="11" font-weight="600" fill="var(--gold-bri)" font-family="'Noto Serif KR',serif">${escSvg(label)}</text>
+      <text x="${barW - 14}" y="15" text-anchor="end" font-size="11" fill="var(--gold-bri)" font-family="JetBrains Mono,monospace">click →</text>
+    </g>`;
   }
 
   _renderSvg(stepGroups, totalH) {
