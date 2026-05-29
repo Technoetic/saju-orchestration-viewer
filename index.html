@@ -93,10 +93,6 @@
           <text x="60" y="400" font-size="14" fill="#ff9eb5" font-weight="700">얼굴 사진</text>
           <text x="60" y="420" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">face_image · base64</text>
 
-          <!-- 손 사진 (손금 → 옥선 할미) -->
-          <rect x="40" y="455" width="200" height="60" rx="10" fill="#2b2615" stroke="#fcd34d"/>
-          <text x="60" y="480" font-size="14" fill="#fcd34d" font-weight="700">손 사진</text>
-          <text x="60" y="500" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">palm_image · base64</text>
         </g>
 
         <!-- COLUMN 2 : DOMAIN ENGINES (7인 점술가 + MBTI + 임상, clickable) -->
@@ -119,14 +115,6 @@
             <text x="565" y="139" font-size="14" fill="#ff9eb5" text-anchor="end" font-family="JetBrains Mono,monospace">⊕</text>
           </g>
 
-          <!-- 옥선 할미 — 손금 -->
-          <g class="pipe-node" data-pipeline="palm" style="cursor:pointer">
-            <rect x="320" y="187" width="260" height="56" rx="10" fill="#2b2615" stroke="#fcd34d"/>
-            <text x="340" y="208" font-size="13" fill="#fcd34d" font-weight="700">옥선 할미 · 손금</text>
-            <text x="340" y="225" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">/api/palm/reading</text>
-            <text x="340" y="238" font-size="10" fill="#5f5638" font-family="JetBrains Mono,monospace">4대선 + 금성대 결정론 점수</text>
-            <text x="565" y="205" font-size="14" fill="#fcd34d" text-anchor="end" font-family="JetBrains Mono,monospace">⊕</text>
-          </g>
 
           <!-- 묵향 선생 — 이름 -->
           <g class="pipe-node" data-pipeline="name" style="cursor:pointer">
@@ -231,8 +219,9 @@
         </g>
 
         <!-- EDGES : input -> engines (실 코드 매핑 정합)
-             INPUT y 중심: 1=85(생년) · 2=165(MBTI) · 3=245(꿈) · 4=325(점복) · 5=405(얼굴) · 6=485(손)
-             DOMAIN y 중심: 사주=83 · 관상=149 · 손금=215 · 이름=281 · 꿈=347 · 점복=413 · 별빛=479 · MBTI보조=537 · 임상=605
+             INPUT y 중심: 1=85(생년) · 2=165(MBTI) · 3=245(꿈) · 4=325(점복) · 5=405(얼굴)
+             DOMAIN y 중심: 사주=83 · 관상=149 · 이름=281 · 꿈=347 · 점복=413 · 별빛=479 · MBTI보조=537 · 임상=605
+             (palm 도메인 제거 — 노드·입력·간선·범례 모두 삭제)
         -->
         <g fill="none" stroke="#6e5a26" stroke-width="1.5" marker-end="url(#arr)">
           <!-- 생년월일시·성별 (y=85) → 사주(83) + 이름(281) -->
@@ -248,8 +237,6 @@
           <path class="edge" d="M240 325  C 280 325,280 479,320 479"/>
           <!-- 얼굴 사진 (y=405) → 운학 도사 관상(149) -->
           <path stroke="#ff9eb5" class="edge" d="M240 405  C 280 405,280 149,320 149"/>
-          <!-- 손 사진 (y=485) → 옥선 할미 손금(215) -->
-          <path stroke="#fcd34d" class="edge" d="M240 485  C 280 485,280 215,320 215"/>
           <!-- 임상은 사용자 별도 자가검사 선택 (INPUT 직결 X — 별도 선택 단계) -->
         </g>
 
@@ -257,7 +244,6 @@
         <g fill="none" stroke="#f4d35e" stroke-width="1.7" marker-end="url(#arrgold)" opacity=".85">
           <path class="edge" id="e-saju"     d="M580 83  C 630 83, 630 250, 680 250"/>
           <path class="edge" id="e-face"     d="M580 149 C 630 149, 630 275, 680 275"/>
-          <path class="edge" id="e-palm"     d="M580 215 C 630 215, 630 300, 680 300"/>
           <path class="edge" id="e-name"     d="M580 281 C 630 281, 630 325, 680 325"/>
           <path class="edge" id="e-dream"    d="M580 347 C 630 347, 630 350, 680 350"/>
           <path class="edge" id="e-div"      d="M580 413 C 630 413, 630 375, 680 375"/>
@@ -287,7 +273,6 @@
       <div class="legend">
         <span><i style="background:#6dc375"></i>만월 아씨 · 사주</span>
         <span><i style="background:#ff9eb5"></i>운학 도사 · 관상</span>
-        <span><i style="background:#fcd34d"></i>옥선 할미 · 손금</span>
         <span><i style="background:#a78bfa"></i>묵향 선생 · 이름</span>
         <span><i style="background:#6fb8ff"></i>몽이 도령 · 꿈</span>
         <span><i style="background:#d4a857"></i>화선 낭자 · 점복</span>
