@@ -273,94 +273,11 @@
     </div>
   </section>
 
-  <!-- ───── PROOF OF GROUNDING ───── -->
-  <section>
-    <div class="sec-head">
-      <div class="num">02 ─ PROOF OF GROUNDING</div>
-      <h2>"LLM이 사주를 아는 게 아닙니다"</h2>
-      <div class="hint">동일 입력으로 3가지를 동시 호출 · LLM은 엔진 데이터를 받아 해석만 합니다</div>
-    </div>
-
-    <div class="proof-banner">
-      <div>
-        <div class="big">🛡 LLM 학습 지식 ≠ 우리 서비스 응답</div>
-        <div class="sub">
-          좌측 <b style="color:#6dc375">결정론적 명식 엔진</b>은 LLM이 아닌 순수 알고리즘으로 천간·지지·십성·대운·신살을 계산합니다.<br>
-          중앙 <b style="color:#f4d35e">Grounded</b>는 그 결과를 LLM에 주입해 해석하고, 우측 <b style="color:#ff7a7a">LLM-only</b>는 같은 질문을 엔진 없이 LLM에만 던집니다.
-        </div>
-      </div>
-      <div class="vs">
-        <b>GROUNDED</b>: engine.json → LLM<br>
-        <i>NAKED LLM</i>: prompt → LLM (no engine)
-      </div>
-    </div>
-
-    <div class="proof-input">
-      <div>
-        <label>생년월일시 (dt_local)</label>
-        <input id="p-dt" type="text" value="1990-06-15T12:00:00" />
-      </div>
-      <div>
-        <label>성별</label>
-        <select id="p-gender"><option value="M">男</option><option value="F">女</option></select>
-      </div>
-      <div>
-        <label>MBTI</label>
-        <select id="p-mbti">
-          <option>INTJ</option><option>INTP</option><option>ENTJ</option><option>ENTP</option>
-          <option>INFJ</option><option>INFP</option><option>ENFJ</option><option>ENFP</option>
-          <option>ISTJ</option><option>ISFJ</option><option>ESTJ</option><option>ESFJ</option>
-          <option>ISTP</option><option>ISFP</option><option>ESTP</option><option>ESFP</option>
-        </select>
-      </div>
-      <div style="flex:1">
-        <label>질문</label>
-        <textarea id="p-q">이 사람의 일주와 강한 오행은 무엇이며, 올해 어떤 흐름인가요?</textarea>
-      </div>
-      <button id="p-run">▶ 3종 동시 호출 비교</button>
-    </div>
-
-    <div class="proof-timeline" id="p-timeline">
-      <div class="t" data-pt="0">1 · 엔진 호출</div>
-      <div class="t" data-pt="1">2 · 엔진 출력 추출</div>
-      <div class="t" data-pt="2">3 · Grounded 응답</div>
-      <div class="t" data-pt="3">4 · LLM-only 응답</div>
-      <div class="t" data-pt="4">5 · 키워드 매칭</div>
-    </div>
-
-    <div class="proof-grid">
-      <!-- COL 1 : ENGINE -->
-      <div class="proof-col engine">
-        <span class="badge">DETERMINISTIC</span>
-        <h3>① 명식 엔진 출력</h3>
-        <div class="why">/api/saju · 동일 입력 → 항상 동일 결과 · LLM 미사용</div>
-        <div class="body" id="p-engine"><span class="placeholder">[실행] 버튼을 누르면 엔진이 천간/지지/십성/대운을 결정론적으로 계산합니다.</span></div>
-      </div>
-
-      <!-- COL 2 : GROUNDED -->
-      <div class="proof-col grounded">
-        <span class="badge">GROUNDED LLM</span>
-        <h3>② Grounded — 엔진 데이터 주입</h3>
-        <div class="why">/api/saju/ask · 엔진 JSON을 컨텍스트로 LLM 해석</div>
-        <div class="body" id="p-grounded"><span class="placeholder">엔진이 뽑은 일주·오행·대운이 응답에 그대로 등장합니다. 하이라이트로 확인하세요.</span></div>
-        <div class="scorebar"><span>엔진값 출현: <b id="p-hits-g">–</b></span><span>응답 길이: <b id="p-len-g">–</b></span></div>
-      </div>
-
-      <!-- COL 3 : NAKED LLM -->
-      <div class="proof-col naked">
-        <span class="badge">NAKED LLM</span>
-        <h3>③ LLM-only — 엔진 없이</h3>
-        <div class="why">/api/llm/chat · 같은 질문을 그대로 LLM에 · 엔진 데이터 없음</div>
-        <div class="body" id="p-naked"><span class="placeholder">엔진 데이터가 없으므로 LLM은 일반론·환각·"정보가 없다"를 응답합니다.</span></div>
-        <div class="scorebar red"><span>엔진값 출현: <b id="p-hits-n">–</b></span><span>응답 길이: <b id="p-len-n">–</b></span></div>
-      </div>
-    </div>
-  </section>
 
   <!-- LIVE DEMOS -->
   <section>
     <div class="sec-head">
-      <div class="num">03 ─ LIVE DEMO</div>
+      <div class="num">02 ─ LIVE DEMO</div>
       <h2>실시간 호출 · 단계별 타임라인</h2>
       <div class="hint">각 카드의 [실행] 버튼이 실제 프로덕션 API를 호출합니다</div>
     </div>
@@ -461,7 +378,7 @@
   <!-- METRICS -->
   <section>
     <div class="sec-head">
-      <div class="num">04 ─ TELEMETRY</div>
+      <div class="num">03 ─ TELEMETRY</div>
       <h2>실시간 운영 지표</h2>
       <div class="hint">자동 갱신 · 매 10초</div>
     </div>
@@ -488,7 +405,7 @@
   <!-- COMPLIANCE & SAFETY — ADR-056~065 -->
   <section>
     <div class="sec-head">
-      <div class="num">05 ─ COMPLIANCE &amp; SAFETY</div>
+      <div class="num">04 ─ COMPLIANCE &amp; SAFETY</div>
       <h2>운영 표준 · 법적 준수 · 학파 통설</h2>
       <div class="hint">ADR-056 ~ ADR-065 · 94 회귀 PASS</div>
     </div>

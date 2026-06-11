@@ -12,6 +12,4 @@
   .sec-head{flex-wrap:wrap}
   .sec-head .hint{margin-left:0;flex:1 1 100%;font-size:12px}
   .sec-head h2{font-size:20px}
-  .proof-input textarea{min-width:0;width:100%}
-  .proof-input>div{flex:1 1 100%}
 }
