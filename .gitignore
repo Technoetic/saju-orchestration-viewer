@@ -8,3 +8,6 @@ __pycache__/
 Thumbs.db
 .vscode/
 .idea/
+
+# 로컬 검증 산출물
+step_archive/
