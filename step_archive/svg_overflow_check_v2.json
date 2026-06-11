@@ -1,0 +1,15 @@
+[
+  {
+    "svgIndex": 0,
+    "totalTexts": 68,
+    "totalRects": 21,
+    "overflowCount": 1,
+    "overflows": [
+      {
+        "txt": "/metrics · 1% sample · ADR-036",
+        "fs": "11",
+        "exceed": 14
+      }
+    ]
+  }
+]

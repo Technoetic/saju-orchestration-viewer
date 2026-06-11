@@ -9,7 +9,4 @@
   .hero .live span{flex:1 1 40%;display:flex;align-items:center;gap:6px;white-space:nowrap}
   .hero .live span+span{border-left:0;padding-left:0}
   .hero .live b{font-size:14px}
-  .sec-head{flex-wrap:wrap}
-  .sec-head .hint{margin-left:0;flex:1 1 100%;font-size:12px}
-  .sec-head h2{font-size:20px}
 }

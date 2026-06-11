@@ -1,0 +1,44 @@
+[
+  {
+    "index": 0,
+    "promptKey": "face_stage1",
+    "parentTransform": "translate(180, 978)",
+    "barLocalX": 20,
+    "barLocalY": 176,
+    "barH": 22,
+    "barW": 820,
+    "barBottom": 198,
+    "cardH": 208,
+    "cardW": 860,
+    "withinCard": true,
+    "marginBottom": 10
+  },
+  {
+    "index": 1,
+    "promptKey": "face_stage1",
+    "parentTransform": "translate(180, 1218)",
+    "barLocalX": 20,
+    "barLocalY": 154,
+    "barH": 22,
+    "barW": 820,
+    "barBottom": 176,
+    "cardH": 186,
+    "cardW": 860,
+    "withinCard": true,
+    "marginBottom": 10
+  },
+  {
+    "index": 2,
+    "promptKey": "face",
+    "parentTransform": "translate(180, 1612)",
+    "barLocalX": 20,
+    "barLocalY": 176,
+    "barH": 22,
+    "barW": 820,
+    "barBottom": 198,
+    "cardH": 208,
+    "cardW": 860,
+    "withinCard": true,
+    "marginBottom": 10
+  }
+]
