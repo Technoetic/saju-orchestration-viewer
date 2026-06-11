@@ -1,0 +1,34 @@
+/* 데스크톱 한 화면 맞춤 — 스크롤 제거.
+   SVG는 viewBox(1380×620) 비율을 유지한 채 가용 높이에 맞춰 축소된다.
+   모바일(≤900px)은 기존 스크롤 레이아웃 유지. */
+@media (min-width: 901px) {
+  html, body { height: 100%; overflow: hidden; }
+  .wrap {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 18px 28px 16px;
+  }
+  .hero { flex: 0 0 auto; padding: 6px 4px 14px; }
+  .hero h1 { font-size: clamp(28px, 3.6vh, 44px); }
+  section {
+    flex: 1 1 auto;
+    min-height: 0;
+    margin-top: 16px;
+    display: flex;
+  }
+  .arch {
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .arch svg {
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .legend { flex: 0 0 auto; }
+}
