@@ -22,7 +22,7 @@
 
   <section>
     <div class="arch">
-      <svg viewBox="0 0 1380 620" xmlns="http://www.w3.org/2000/svg" aria-label="orchestration diagram">
+      <svg viewBox="0 0 1380 550" xmlns="http://www.w3.org/2000/svg" aria-label="orchestration diagram">
         <defs>
           <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
             <path d="M0 0 L10 5 L0 10 z" fill="#6e5a26"/>
@@ -85,64 +85,64 @@
         <g>
           <!-- 만월 아씨 — 사주 -->
           <g class="pipe-node" data-pipeline="saju" style="cursor:pointer">
-            <rect x="320" y="55" width="260" height="56" rx="10" fill="#13251a" stroke="#6dc375"/>
-            <text x="340" y="76" font-size="13" fill="#6dc375" font-weight="700">만월 아씨 · 사주 엔진</text>
-            <text x="340" y="93" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">/api/saju · /api/llm/chat</text>
-            <text x="340" y="106" font-size="10" fill="#5f5638" font-family="JetBrains Mono,monospace">60갑자 · 십성 · 운성 · 대운</text>
-            <text x="565" y="73" font-size="14" fill="#6dc375" text-anchor="end" font-family="JetBrains Mono,monospace">⊕</text>
+            <rect x="320" y="66" width="260" height="56" rx="10" fill="#13251a" stroke="#6dc375"/>
+            <text x="340" y="87" font-size="13" fill="#6dc375" font-weight="700">만월 아씨 · 사주 엔진</text>
+            <text x="340" y="104" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">/api/saju · /api/llm/chat</text>
+            <text x="340" y="117" font-size="10" fill="#5f5638" font-family="JetBrains Mono,monospace">60갑자 · 십성 · 운성 · 대운</text>
+            <text x="565" y="84" font-size="14" fill="#6dc375" text-anchor="end" font-family="JetBrains Mono,monospace">⊕</text>
           </g>
 
           <!-- 운학 도사 — 관상 (ADR-273~276 최신화) -->
           <g class="pipe-node" data-pipeline="face" style="cursor:pointer">
-            <rect x="320" y="121" width="260" height="56" rx="10" fill="#2a1822" stroke="#ff9eb5"/>
-            <text x="340" y="142" font-size="13" fill="#ff9eb5" font-weight="700">운학 도사 · 관상</text>
-            <text x="340" y="159" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">/api/face/reading</text>
-            <text x="340" y="172" font-size="10" fill="#5f5638" font-family="JetBrains Mono,monospace">AI 2단계(묘사·어조) · 학파 4종</text>
-            <text x="565" y="139" font-size="14" fill="#ff9eb5" text-anchor="end" font-family="JetBrains Mono,monospace">⊕</text>
+            <rect x="320" y="136" width="260" height="56" rx="10" fill="#2a1822" stroke="#ff9eb5"/>
+            <text x="340" y="157" font-size="13" fill="#ff9eb5" font-weight="700">운학 도사 · 관상</text>
+            <text x="340" y="174" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">/api/face/reading</text>
+            <text x="340" y="187" font-size="10" fill="#5f5638" font-family="JetBrains Mono,monospace">AI 2단계(묘사·어조) · 학파 4종</text>
+            <text x="565" y="154" font-size="14" fill="#ff9eb5" text-anchor="end" font-family="JetBrains Mono,monospace">⊕</text>
           </g>
 
 
           <!-- 묵향 선생 — 이름 -->
           <g class="pipe-node" data-pipeline="name" style="cursor:pointer">
-            <rect x="320" y="253" width="260" height="56" rx="10" fill="#1f1a32" stroke="#a78bfa"/>
-            <text x="340" y="274" font-size="13" fill="#a78bfa" font-weight="700">묵향 선생 · 이름</text>
-            <text x="340" y="291" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">/api/name/reading</text>
-            <text x="340" y="304" font-size="10" fill="#5f5638" font-family="JetBrains Mono,monospace">대법원 9389 한자 + 음운·자원오행</text>
-            <text x="565" y="271" font-size="14" fill="#a78bfa" text-anchor="end" font-family="JetBrains Mono,monospace">⊕</text>
+            <rect x="320" y="206" width="260" height="56" rx="10" fill="#1f1a32" stroke="#a78bfa"/>
+            <text x="340" y="227" font-size="13" fill="#a78bfa" font-weight="700">묵향 선생 · 이름</text>
+            <text x="340" y="244" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">/api/name/reading</text>
+            <text x="340" y="257" font-size="10" fill="#5f5638" font-family="JetBrains Mono,monospace">대법원 9389 한자 + 음운·자원오행</text>
+            <text x="565" y="224" font-size="14" fill="#a78bfa" text-anchor="end" font-family="JetBrains Mono,monospace">⊕</text>
           </g>
 
           <!-- 몽이 도령 — 꿈 -->
           <g class="pipe-node" data-pipeline="dream" style="cursor:pointer">
-            <rect x="320" y="319" width="260" height="56" rx="10" fill="#1c2333" stroke="#6fb8ff"/>
-            <text x="340" y="340" font-size="13" fill="#6fb8ff" font-weight="700">몽이 도령 · 꿈 해석</text>
-            <text x="340" y="357" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">/api/dream/interpret_v2</text>
-            <text x="340" y="370" font-size="10" fill="#5f5638" font-family="JetBrains Mono,monospace">HvDC + Hobson + 14 핵심 + 6 보조</text>
-            <text x="565" y="337" font-size="14" fill="#6fb8ff" text-anchor="end" font-family="JetBrains Mono,monospace">⊕</text>
+            <rect x="320" y="276" width="260" height="56" rx="10" fill="#1c2333" stroke="#6fb8ff"/>
+            <text x="340" y="297" font-size="13" fill="#6fb8ff" font-weight="700">몽이 도령 · 꿈 해석</text>
+            <text x="340" y="314" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">/api/dream/interpret_v2</text>
+            <text x="340" y="327" font-size="10" fill="#5f5638" font-family="JetBrains Mono,monospace">HvDC + Hobson + 14 핵심 + 6 보조</text>
+            <text x="565" y="294" font-size="14" fill="#6fb8ff" text-anchor="end" font-family="JetBrains Mono,monospace">⊕</text>
           </g>
 
           <!-- 화선 낭자 — 화패·타로·주역 -->
           <g class="pipe-node" data-pipeline="divination" style="cursor:pointer">
-            <rect x="320" y="385" width="260" height="56" rx="10" fill="#2b2415" stroke="#d4a857"/>
-            <text x="340" y="406" font-size="13" fill="#d4a857" font-weight="700">화선 낭자 · 점복</text>
-            <text x="340" y="423" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">/api/hwapae · /tarot · /iching</text>
-            <text x="340" y="436" font-size="10" fill="#5f5638" font-family="JetBrains Mono,monospace">화패 48패 + 타로 78 + 주역 64괘</text>
-            <text x="565" y="403" font-size="14" fill="#d4a857" text-anchor="end" font-family="JetBrains Mono,monospace">⊕</text>
+            <rect x="320" y="346" width="260" height="56" rx="10" fill="#2b2415" stroke="#d4a857"/>
+            <text x="340" y="367" font-size="13" fill="#d4a857" font-weight="700">화선 낭자 · 점복</text>
+            <text x="340" y="384" font-size="11" fill="#9b8c63" font-family="JetBrains Mono,monospace">/api/hwapae · /tarot · /iching</text>
+            <text x="340" y="397" font-size="10" fill="#5f5638" font-family="JetBrains Mono,monospace">화패 48패 + 타로 78 + 주역 64괘</text>
+            <text x="565" y="364" font-size="14" fill="#d4a857" text-anchor="end" font-family="JetBrains Mono,monospace">⊕</text>
           </g>
 
           <!-- MBTI -->
           <g class="pipe-node" data-pipeline="mbti" style="cursor:pointer">
-            <rect x="320" y="517" width="260" height="40" rx="10" fill="#241319" stroke="#ff7d6b"/>
-            <text x="340" y="535" font-size="12" fill="#ff7d6b" font-weight="700">MBTI 프로필러 (보조)</text>
-            <text x="340" y="551" font-size="10" fill="#5f5638" font-family="JetBrains Mono,monospace">/api/profile · Ni/Te/Fi/Se</text>
-            <text x="565" y="533" font-size="14" fill="#ff7d6b" text-anchor="end" font-family="JetBrains Mono,monospace">⊕</text>
+            <rect x="320" y="430" width="260" height="40" rx="10" fill="#241319" stroke="#ff7d6b"/>
+            <text x="340" y="448" font-size="12" fill="#ff7d6b" font-weight="700">MBTI 프로필러 (보조)</text>
+            <text x="340" y="464" font-size="10" fill="#5f5638" font-family="JetBrains Mono,monospace">/api/profile · Ni/Te/Fi/Se</text>
+            <text x="565" y="446" font-size="14" fill="#ff7d6b" text-anchor="end" font-family="JetBrains Mono,monospace">⊕</text>
           </g>
 
           <!-- 임상 -->
           <g class="pipe-node" data-pipeline="clinical" style="cursor:pointer">
-            <rect x="320" y="565" width="260" height="40" rx="10" fill="#1f2731" stroke="#d0d0d0"/>
-            <text x="340" y="583" font-size="12" fill="#d0d0d0" font-weight="700">임상 스크리닝 (안전망)</text>
-            <text x="340" y="599" font-size="10" fill="#5f5638" font-family="JetBrains Mono,monospace">/api/clinical · PHQ-9·GAD-7·ISI</text>
-            <text x="565" y="581" font-size="14" fill="#d0d0d0" text-anchor="end" font-family="JetBrains Mono,monospace">⊕</text>
+            <rect x="320" y="484" width="260" height="40" rx="10" fill="#1f2731" stroke="#d0d0d0"/>
+            <text x="340" y="502" font-size="12" fill="#d0d0d0" font-weight="700">임상 스크리닝 (안전망)</text>
+            <text x="340" y="518" font-size="10" fill="#5f5638" font-family="JetBrains Mono,monospace">/api/clinical · PHQ-9·GAD-7·ISI</text>
+            <text x="565" y="500" font-size="14" fill="#d0d0d0" text-anchor="end" font-family="JetBrains Mono,monospace">⊕</text>
           </g>
         </g>
 
@@ -197,34 +197,34 @@
 
         <!-- EDGES : input -> engines (실 코드 매핑 정합)
              INPUT y 중심: 1=85(생년) · 2=165(MBTI) · 3=245(꿈) · 4=325(점복) · 5=405(얼굴)
-             DOMAIN y 중심: 사주=83 · 관상=149 · 이름=281 · 꿈=347 · 점복=413 · MBTI보조=537 · 임상=605
+             DOMAIN y 중심: 사주=94 · 관상=164 · 이름=234 · 꿈=304 · 점복=374 · MBTI보조=450 · 임상=504
              (palm·star 도메인 제거 — 노드·입력·간선·범례 모두 삭제)
         -->
         <g fill="none" stroke="#6e5a26" stroke-width="1.5" marker-end="url(#arr)">
           <!-- 생년월일시·성별 (y=85) → 사주(83) + 이름(281) -->
-          <path class="edge" d="M240 85   C 280 85, 280 83, 320 83"/>
-          <path class="edge" d="M240 85   C 280 85, 280 281,320 281"/>
+          <path class="edge" d="M240 85   C 280 85, 280 94, 320 94"/>
+          <path class="edge" d="M240 85   C 280 85, 280 234,320 234"/>
           <!-- MBTI (y=165) → 사주 융합(83) + MBTI 보조(537) -->
-          <path class="edge" d="M240 165  C 280 165,280 83, 320 83"/>
-          <path class="edge" d="M240 165  C 280 165,280 537,320 537"/>
+          <path class="edge" d="M240 165  C 280 165,280 94, 320 94"/>
+          <path class="edge" d="M240 165  C 280 165,280 450,320 450"/>
           <!-- 꿈 텍스트 (y=245) → 몽이 도령 꿈 해석(347) -->
-          <path class="edge" d="M240 245  C 280 245,280 347,320 347"/>
+          <path class="edge" d="M240 245  C 280 245,280 304,320 304"/>
           <!-- 타로/화패/주역 + question (y=325) → 화선 점복(413) -->
-          <path class="edge" d="M240 325  C 280 325,280 413,320 413"/>
+          <path class="edge" d="M240 325  C 280 325,280 374,320 374"/>
           <!-- 얼굴 사진 (y=405) → 운학 도사 관상(149) -->
-          <path stroke="#ff9eb5" class="edge" d="M240 405  C 280 405,280 149,320 149"/>
+          <path stroke="#ff9eb5" class="edge" d="M240 405  C 280 405,280 164,320 164"/>
           <!-- 임상은 사용자 별도 자가검사 선택 (INPUT 직결 X — 별도 선택 단계) -->
         </g>
 
         <!-- EDGES : engines -> fusion (9개 → fusion box 230~450) -->
         <g fill="none" stroke="#f4d35e" stroke-width="1.7" marker-end="url(#arrgold)" opacity=".85">
-          <path class="edge" id="e-saju"     d="M580 83  C 630 83, 630 250, 680 250"/>
-          <path class="edge" id="e-face"     d="M580 149 C 630 149, 630 275, 680 275"/>
-          <path class="edge" id="e-name"     d="M580 281 C 630 281, 630 325, 680 325"/>
-          <path class="edge" id="e-dream"    d="M580 347 C 630 347, 630 350, 680 350"/>
-          <path class="edge" id="e-div"      d="M580 413 C 630 413, 630 375, 680 375"/>
-          <path class="edge" id="e-mbti"     d="M580 537 C 630 537, 630 425, 680 425"/>
-          <path class="edge" id="e-clinical" d="M580 585 C 630 585, 630 445, 680 445"/>
+          <path class="edge" id="e-saju"     d="M580 94  C 630 94, 630 250, 680 250"/>
+          <path class="edge" id="e-face"     d="M580 164 C 630 164, 630 275, 680 275"/>
+          <path class="edge" id="e-name"     d="M580 234 C 630 234, 630 325, 680 325"/>
+          <path class="edge" id="e-dream"    d="M580 304 C 630 304, 630 350, 680 350"/>
+          <path class="edge" id="e-div"      d="M580 374 C 630 374, 630 375, 680 375"/>
+          <path class="edge" id="e-mbti"     d="M580 450 C 630 450, 630 425, 680 425"/>
+          <path class="edge" id="e-clinical" d="M580 504 C 630 504, 630 445, 680 445"/>
         </g>
 
         <!-- EDGES : fusion -> safety (4개 → safety box 170~436) -->
